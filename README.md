@@ -7,9 +7,6 @@ VSTiBox is a dedicated VST host synth for live performance. It is a Windows base
 - Custom linear audio PSU 230Vac in, +/-10Vdc out
 - Custom interface boards with 8x 24PPR encoders and 8x RGB silicon pad buttons 
 
-# Reference
-For information of the original project by Tom Lokovic, as well as the original documentation and samples, see the midi-dot-net Google Code page.
-
 # Libraries
 This project uses a number of libraries. 
 - BlueWave.Interop.Asio	https://www.codeproject.com/Articles/24536/Low-Latency-Audio-using-ASIO-Drivers-in-NET?msg=4526889
