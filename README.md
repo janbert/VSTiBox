@@ -1,6 +1,6 @@
 # VSTiBox
 VSTiBox is a dedicated VST host synth for live performance. It is a Windows based machine that contains all components to run VST software synths that are controlled by an external midi keyboard. Core components are:
-- Micro-ATX with intel i5 running Windows 7
+- Micro-ATX with Intel i5 running Windows 7
 - Custom wooden/acrylic lasercut case
 - Custon VST host software written in C#
 - Custom audio mixer with multiple I/O and headphone out
