@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0A704654-566E-40B4-A430-A0B27E61F20F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VSTiBox</RootNamespace>
+    <AssemblyName>VSTiBox</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ManifestCertificateThumbprint>2753D6284A9D5FF2C2D66064504CECEA9F00E344</ManifestCertificateThumbprint>
+    <ManifestKeyFile>VSTiBox_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>false</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>D:\Dropbox\DIY VST host\Source\Publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bluewave.Interop.Asio">
+      <HintPath>.\Bluewave.Interop.Asio.dll</HintPath>
+    </Reference>
+    <Reference Include="DirectMidi.Interop">
+      <HintPath>.\DirectMidi.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Jacobi.Vst.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fa678e13c1efc859, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Jacobi.Vst.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Jacobi.Vst.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fa678e13c1efc859, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Jacobi.Vst.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Lame">
+      <HintPath>..\packages\NAudio.Lame.1.0.4\lib\net20\NAudio.Lame.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenHardwareMonitorLib, Version=0.8.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\OpenHardwareMonitorLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AudioBufferInfo.cs" />
+    <Compile Include="Common\Bank.cs" />
+    <Compile Include="Common\BlockingQueue.cs" />
+    <Compile Include="Common\Board.cs" />
+    <Compile Include="Common\Button.cs" />
+    <Compile Include="Common\Encoder.cs" />
+    <Compile Include="Common\BoardManager.cs" />
+    <Compile Include="Common\GenericRingBuffer.cs" />
+    <Compile Include="Common\VolumeLevelConverter.cs" />
+    <Compile Include="Common\VstInstrumentPlugin.cs" />
+    <Compile Include="Common\VstPluginChannel.cs" />
+    <Compile Include="Common\Led.cs" />
+    <Compile Include="Common\MachineInfo.cs" />
+    <Compile Include="Common\DistributedThread.cs" />
+    <Compile Include="Common\HostCommandStub.cs" />
+    <Compile Include="Common\MediaTimer.cs" />
+    <Compile Include="Common\MetronomeTimer.cs" />
+    <Compile Include="Common\MouseWheelHandler.cs" />
+    <Compile Include="Common\VstPlugin.cs" />
+    <Compile Include="Controls\EffectPluginSelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EffectPluginSelectionControl.Designer.cs">
+      <DependentUpon>EffectPluginSelectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EntryForm.Designer.cs">
+      <DependentUpon>EntryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\AsioMP3Recorder.cs" />
+    <Compile Include="Common\AudioPluginEngine.cs" />
+    <Compile Include="Common\Preset.cs" />
+    <Compile Include="Common\ByteArrayRingBuffer.cs" />
+    <Compile Include="Common\SerialPortInterface.cs" />
+    <Compile Include="Common\Settings.cs" />
+    <Compile Include="Common\SettingsManager.cs" />
+    <Compile Include="Common\SystemDiagnostics.cs" />
+    <Compile Include="Common\VstInfo.cs" />
+    <Compile Include="Common\VSTMenuItem.cs" />
+    <Compile Include="Common\WasapiPlayer.cs" />
+    <Compile Include="Controls\AudioPlayback\AsioOutPlugin.cs" />
+    <Compile Include="Controls\AudioPlayback\AsioOutSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AudioPlayback\AsioOutSettingsPanel.Designer.cs">
+      <DependentUpon>AsioOutSettingsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AudioPlayback\AudioPlaybackPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AudioPlayback\AudioPlaybackPanel.Designer.cs">
+      <DependentUpon>AudioPlaybackPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ChannelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ChannelControl.Designer.cs">
+      <DependentUpon>ChannelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\EffectPlugins.cs" />
+    <Compile Include="Controls\DragDropListBox\DragDropListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DragDropListBox\DroppedEventArgs.cs" />
+    <Compile Include="Controls\DragDropListBox\IDragDropSource.cs" />
+    <Compile Include="Controls\DragDropListBox\VisualCue.cs" />
+    <Compile Include="Controls\DragDropListBox\Win32.cs" />
+    <Compile Include="Controls\EffectPluginControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EffectPluginControl.Designer.cs">
+      <DependentUpon>EffectPluginControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Keyboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Keyboard.designer.cs">
+      <DependentUpon>Keyboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KeyboardKey.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\KeyZone.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KeyZone.Designer.cs">
+      <DependentUpon>KeyZone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Knob.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MenuControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MetroComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\NummericTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Piano.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Piano.Designer.cs">
+      <DependentUpon>Piano.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PianoKey.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PianoOctave.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PianoOctave.Designer.cs">
+      <DependentUpon>PianoOctave.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PopupScrollList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PopupScrollList.Designer.cs">
+      <DependentUpon>PopupScrollList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RangeControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RecordControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RecordControl.Designer.cs">
+      <DependentUpon>RecordControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RingSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ScrollList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\VuMeter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Midi\MidiDevice.cs" />
+    <Compile Include="Midi\MidiMessage.cs" />
+    <Compile Include="Midi\MidiSysexMessage.cs" />
+    <Compile Include="Forms\PDFViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PDFViewForm.Designer.cs">
+      <DependentUpon>PDFViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PopupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PopupForm.Designer.cs">
+      <DependentUpon>PopupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\EffectPluginSelectionControl.resx">
+      <DependentUpon>EffectPluginSelectionControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EntryForm.resx">
+      <DependentUpon>EntryForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AudioPlayback\AsioOutSettingsPanel.resx">
+      <DependentUpon>AsioOutSettingsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AudioPlayback\AudioPlaybackPanel.resx">
+      <DependentUpon>AudioPlaybackPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ChannelControl.resx">
+      <DependentUpon>ChannelControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EffectPluginControl.resx">
+      <DependentUpon>EffectPluginControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Keyboard.resx">
+      <DependentUpon>Keyboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KeyZone.resx">
+      <DependentUpon>KeyZone.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MenuControl.resx">
+      <DependentUpon>MenuControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Piano.resx">
+      <DependentUpon>Piano.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PianoOctave.resx">
+      <DependentUpon>PianoOctave.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PopupScrollList.resx">
+      <DependentUpon>PopupScrollList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RecordControl.resx">
+      <DependentUpon>RecordControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PDFViewForm.resx">
+      <DependentUpon>PDFViewForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PopupForm.resx">
+      <DependentUpon>PopupForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kernel32Midi\Kernel32Midi.csproj">
+      <Project>{b0d198d9-a4c5-4ca8-acac-8418143c7821}</Project>
+      <Name>Kernel32Midi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PDFView\PDFView.vbproj">
+      <Project>{170D7D1B-61B9-4E8B-9CD3-88350725379F}</Project>
+      <Name>PDFView</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libmp3lame.32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libmp3lame.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="piano.ico" />
+    <Content Include="PluginNetInterface-x86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\backspace.png" />
+    <None Include="Resources\NAudioStop.png" />
+    <None Include="Resources\NAudioShuffle.png" />
+    <None Include="Resources\NAudioRewind.png" />
+    <None Include="Resources\NAudioPlay.png" />
+    <None Include="Resources\NAudioPause.png" />
+    <None Include="Resources\NAudioOpen.png" />
+    <None Include="Resources\NAudioLoop.png" />
+    <None Include="Resources\NAudioForward.png" />
+    <None Include="Resources\NAudioBack.png" />
+    <None Include="Resources\open_file.png" />
+    <None Include="Resources\play-disabled2.png" />
+    <None Include="Resources\forward-disabled2.png" />
+    <None Include="Resources\backward-disabled2.png" />
+    <None Include="Resources\stop-disabled.png" />
+    <None Include="Resources\start-disabled.png" />
+    <None Include="Resources\forward-disabled.png" />
+    <None Include="Resources\backward-disabled.png" />
+    <None Include="Resources\key_zone_on.png" />
+    <None Include="Resources\key_zone_off.png" />
+    <None Include="Resources\insert_on.png" />
+    <None Include="Resources\insert_off.png" />
+    <None Include="Resources\arrow_right.png" />
+    <None Include="Resources\arrow_left.png" />
+    <None Include="Resources\arrow_up.png" />
+    <None Include="Resources\arrow_down.png" />
+    <None Include="Resources\inactive.png" />
+    <None Include="Resources\active.png" />
+    <None Include="Resources\led_grey.png" />
+    <None Include="Resources\led_green.png" />
+    <None Include="Resources\key_zone.png" />
+    <None Include="Resources\FX_insert_white.png" />
+    <None Include="Resources\Actions-media-seek-forward-icon.png" />
+    <None Include="Resources\Actions-media-seek-backward-icon.png" />
+    <None Include="Resources\Record-Pressed-icon.png" />
+    <None Include="Resources\Actions-media-playback-stop-icon.png" />
+    <None Include="Resources\Actions-media-playback-start-icon.png" />
+    <None Include="Resources\Actions-media-playback-pause-icon.png" />
+    <None Include="Resources\cpu.png" />
+    <None Include="Resources\thermometer.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

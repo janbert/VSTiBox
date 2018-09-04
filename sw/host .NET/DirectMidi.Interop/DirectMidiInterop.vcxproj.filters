@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="directmidi">
+      <UniqueIdentifier>{c5aa1f0a-44c6-46d5-a6aa-1e0838e9fa51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="directmidi\DSUTIL">
+      <UniqueIdentifier>{43dd1a4b-3e12-4f96-bf8e-0a5af8e72d03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AudioPart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectMusicDefs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectMusicTools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MidiPart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\C3DBuffer.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\C3DListener.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\C3DSegment.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CAPathPerformance.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CAudioPath.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CCollection.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CDirectMusic.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CDLSLoader.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CDMusicException.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CInputPort.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CInstrument.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CMasterClock.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CMidiPort.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\COutputPort.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CPerformance.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CPortPerformance.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CSampleInstrument.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\CSegment.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\Dmhelp.cpp">
+      <Filter>directmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\DSUTIL\DSUTIL.CPP">
+      <Filter>directmidi\DSUTIL</Filter>
+    </ClCompile>
+    <ClCompile Include="directmidi\DSUTIL\DXUTIL.CPP">
+      <Filter>directmidi\DSUTIL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioPart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Declarations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectMusicDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectMusicTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MidiPart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WrapperBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\CAudioPart.h">
+      <Filter>directmidi</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\CDirectBase.h">
+      <Filter>directmidi</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\CDirectMidi.h">
+      <Filter>directmidi</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\CMidipart.h">
+      <Filter>directmidi</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\DSUTIL\DSUTIL.H">
+      <Filter>directmidi\DSUTIL</Filter>
+    </ClInclude>
+    <ClInclude Include="directmidi\DSUTIL\DXUTIL.H">
+      <Filter>directmidi\DSUTIL</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

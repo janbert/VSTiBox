@@ -1,0 +1,4 @@
+All of these files must be in the same directory as PDFView.dll
+The tessdata folder and all of it's contents must be in the same directory as tessnet2.dll
+
+If you are running 64 bit, please replace the DLLs here with their 64 bit versions from the x64 directory.

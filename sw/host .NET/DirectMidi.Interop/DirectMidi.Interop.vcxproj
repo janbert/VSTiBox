@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ProjectGuid>{0DD431AD-673B-438A-9A79-33D250F19BEE}</ProjectGuid>
+    <RootNamespace>DirectMidi.Interop</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+    <ProjectName>DirectMidi.Interop</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v110_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v110_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK (August 2007)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AudioPart.cpp" />
+    <ClCompile Include="DirectMusicDefs.cpp" />
+    <ClCompile Include="DirectMusicTools.cpp" />
+    <ClCompile Include="MidiPart.cpp" />
+    <ClCompile Include="directmidi\C3DBuffer.cpp" />
+    <ClCompile Include="directmidi\C3DListener.cpp" />
+    <ClCompile Include="directmidi\C3DSegment.cpp" />
+    <ClCompile Include="directmidi\CAPathPerformance.cpp" />
+    <ClCompile Include="directmidi\CAudioPath.cpp" />
+    <ClCompile Include="directmidi\CCollection.cpp" />
+    <ClCompile Include="directmidi\CDirectMusic.cpp" />
+    <ClCompile Include="directmidi\CDLSLoader.cpp" />
+    <ClCompile Include="directmidi\CDMusicException.cpp" />
+    <ClCompile Include="directmidi\CInputPort.cpp" />
+    <ClCompile Include="directmidi\CInstrument.cpp" />
+    <ClCompile Include="directmidi\CMasterClock.cpp" />
+    <ClCompile Include="directmidi\CMidiPort.cpp" />
+    <ClCompile Include="directmidi\COutputPort.cpp" />
+    <ClCompile Include="directmidi\CPerformance.cpp" />
+    <ClCompile Include="directmidi\CPortPerformance.cpp" />
+    <ClCompile Include="directmidi\CSampleInstrument.cpp" />
+    <ClCompile Include="directmidi\CSegment.cpp" />
+    <ClCompile Include="directmidi\Dmhelp.cpp" />
+    <ClCompile Include="directmidi\DSUTIL\DSUTIL.CPP" />
+    <ClCompile Include="directmidi\DSUTIL\DXUTIL.CPP" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioPart.h" />
+    <ClInclude Include="Declarations.h" />
+    <ClInclude Include="DirectBase.h" />
+    <ClInclude Include="DirectMusicDefs.h" />
+    <ClInclude Include="DirectMusicTools.h" />
+    <ClInclude Include="MidiPart.h" />
+    <ClInclude Include="WrapperBase.h" />
+    <ClInclude Include="directmidi\CAudioPart.h" />
+    <ClInclude Include="directmidi\CDirectBase.h" />
+    <ClInclude Include="directmidi\CDirectMidi.h" />
+    <ClInclude Include="directmidi\CMidipart.h" />
+    <ClInclude Include="directmidi\DSUTIL\DSUTIL.H" />
+    <ClInclude Include="directmidi\DSUTIL\DXUTIL.H" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

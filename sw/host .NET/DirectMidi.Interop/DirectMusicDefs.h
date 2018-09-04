@@ -1,0 +1,1040 @@
+/*
+ ____   _  ____  _____ _____ ______  __  __  _  ____   _       __   _   _____ ______
+|  _ \ | ||  _ \|  __//  __//_   _/ |  \/  || ||  _ \ | |     |   \| | |  __//_   _/
+| |_| || || |> /|  _| | <__   | |   | |\/| || || |_| || |  _  | |\   | |  _|   | |
+|____/ |_||_|\_\|____\\____/  |_|   |_|  |_||_||____/ |_| |_| |_| \__| |____\  |_|
+
+////////////////////////////////////////////////////////////////////////////////////
+  
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+ 
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+ 
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ 
+Copyright (c) 2007 by Jason Hendrickson
+Based on the DirectMidi library by Carlos Jiménez de Parga
+
+All rights reserved.
+For any suggestion, please contact me by:
+e-mail: jivinstev@hotmail.com
+
+////////////////////////////////////////////////////////////////////////////////////
+
+Version: 2.3b_0.9.1
+Module : DirectMusicDefs.h
+Purpose: Definition of wrappers around definitions in the DirectX headers
+Created: JH / 07-01-2007
+History: JH / 07-19-2007 
+Date format: Day-month-year
+
+	Update: 07/19/2007
+
+	1. Fixed some method signature bugs
+
+	2. Added support for getting/setting output port parameters with KsProperty
+		
+	3. Added support for both retrieving and implementing custom DirectMidi tool graphs on segments
+
+	4. "Fixed" CSegment class in C++ code to return a reference to the IDirectMusicSegment even if it's not playing
+	
+*/
+
+#pragma once
+#include "WrapperBase.h"
+#include "Declarations.h"
+#include <dmusicf.h>
+
+namespace DirectMidi {
+
+public enum class HR_DMUS : Int32
+{
+	// successes
+	HR_S_OK = S_OK,
+	HR_S_FALSE = S_FALSE,
+
+	// DMusic successes
+	S_PARTIALLOAD = DMUS_S_PARTIALLOAD,
+	S_PARTIALDOWNLOAD = DMUS_S_PARTIALDOWNLOAD,
+	S_REQUEUE = DMUS_S_REQUEUE,
+	S_FREE = DMUS_S_FREE,
+	S_END = DMUS_S_END,
+	S_STRING_TRUNCATED = DMUS_S_STRING_TRUNCATED,
+	S_LAST_TOOL = DMUS_S_LAST_TOOL,
+	S_OVER_CHORD = DMUS_S_OVER_CHORD,
+	S_UP_OCTAVE = DMUS_S_UP_OCTAVE,
+	S_DOWN_OCTAVE = DMUS_S_DOWN_OCTAVE,
+	S_NOBUFFERCONTROL = DMUS_S_NOBUFFERCONTROL,
+	S_GARBAGE_COLLECTED = DMUS_S_GARBAGE_COLLECTED,
+	
+	// DMusic failures
+	E_DRIVER_FAILED = DMUS_E_DRIVER_FAILED,
+	E_PORTS_OPEN = DMUS_E_PORTS_OPEN,
+	E_DEVICE_IN_USE = DMUS_E_DEVICE_IN_USE,
+	E_INSUFFICIENTBUFFER = DMUS_E_INSUFFICIENTBUFFER,
+	E_BUFFERNOTSET = DMUS_E_BUFFERNOTSET,
+	E_NOTADLSCOL = DMUS_E_NOTADLSCOL,
+	E_BUFFERNOTAVAILABLE = DMUS_E_BUFFERNOTAVAILABLE,
+	E_INVALIDOFFSET = DMUS_E_INVALIDOFFSET,
+	E_ALREADY_LOADED = DMUS_E_ALREADY_LOADED,
+	E_INVALIDPOS = DMUS_E_INVALIDPOS,
+	E_INVALIDPATCH = DMUS_E_INVALIDPATCH,
+	E_CANNOTSEEK = DMUS_E_CANNOTSEEK,
+	E_CANNOTWRITE = DMUS_E_CANNOTWRITE,
+	E_CHUNKNOTFOUND = DMUS_E_CHUNKNOTFOUND,
+	E_INVALID_DOWNLOADID = DMUS_E_INVALID_DOWNLOADID,
+	E_NOT_DOWNLOADED_TO_PORT = DMUS_E_NOT_DOWNLOADED_TO_PORT,
+	E_ALREADY_DOWNLOADED = DMUS_E_ALREADY_DOWNLOADED,
+	E_UNKNOWN_PROPERTY = DMUS_E_UNKNOWN_PROPERTY,
+	E_SET_UNSUPPORTED = DMUS_E_SET_UNSUPPORTED,
+	E_GET_UNSUPPORTED = DMUS_E_GET_UNSUPPORTED,
+	E_NOTMONO = DMUS_E_NOTMONO,
+	E_BADARTICULATION = DMUS_E_BADARTICULATION,
+	E_BADINSTRUMENT = DMUS_E_BADINSTRUMENT,
+	E_BADWAVELINK = DMUS_E_BADWAVELINK,
+	E_NOARTICULATION = DMUS_E_NOARTICULATION,
+	E_NOTPCM = DMUS_E_NOTPCM,
+	E_BADWAVE = DMUS_E_BADWAVE,
+	E_BADOFFSETTABLE = DMUS_E_BADOFFSETTABLE,
+	E_UNKNOWNDOWNLOAD = DMUS_E_UNKNOWNDOWNLOAD,
+	E_NOSYNTHSINK = DMUS_E_NOSYNTHSINK,
+	E_ALREADYOPEN = DMUS_E_ALREADYOPEN,
+	E_ALREADYCLOSED = DMUS_E_ALREADYCLOSED,
+	E_SYNTHNOTCONFIGURED = DMUS_E_SYNTHNOTCONFIGURED,
+	E_SYNTHACTIVE = DMUS_E_SYNTHACTIVE,
+	E_CANNOTREAD = DMUS_E_CANNOTREAD,
+	E_DMUSIC_RELEASED = DMUS_E_DMUSIC_RELEASED,
+	E_BUFFER_EMPTY = DMUS_E_BUFFER_EMPTY,
+	E_BUFFER_FULL = DMUS_E_BUFFER_FULL,
+	E_PORT_NOT_CAPTURE = DMUS_E_PORT_NOT_CAPTURE,
+	E_PORT_NOT_RENDER = DMUS_E_PORT_NOT_RENDER,
+	E_DSOUND_NOT_SET = DMUS_E_DSOUND_NOT_SET,
+	E_ALREADY_ACTIVATED = DMUS_E_ALREADY_ACTIVATED,
+	E_INVALIDBUFFER = DMUS_E_INVALIDBUFFER,
+	E_WAVEFORMATNOTSUPPORTED = DMUS_E_WAVEFORMATNOTSUPPORTED,
+	E_SYNTHINACTIVE = DMUS_E_SYNTHINACTIVE,
+	E_DSOUND_ALREADY_SET = DMUS_E_DSOUND_ALREADY_SET,
+	E_INVALID_EVENT = DMUS_E_INVALID_EVENT,
+	E_UNSUPPORTED_STREAM = DMUS_E_UNSUPPORTED_STREAM,
+	E_ALREADY_INITED = DMUS_E_ALREADY_INITED,
+	E_INVALID_BAND = DMUS_E_INVALID_BAND,
+	E_TRACK_HDR_NOT_FIRST_CK = DMUS_E_TRACK_HDR_NOT_FIRST_CK,
+	E_TOOL_HDR_NOT_FIRST_CK = DMUS_E_TOOL_HDR_NOT_FIRST_CK,
+	E_INVALID_TRACK_HDR = DMUS_E_INVALID_TRACK_HDR,
+	E_INVALID_TOOL_HDR = DMUS_E_INVALID_TOOL_HDR,
+	E_ALL_TOOLS_FAILED = DMUS_E_ALL_TOOLS_FAILED,
+	E_ALL_TRACKS_FAILED = DMUS_E_ALL_TRACKS_FAILED,
+	E_NOT_FOUND = DMUS_E_NOT_FOUND,
+	E_NOT_INIT = DMUS_E_NOT_INIT,
+	E_TYPE_DISABLED = DMUS_E_TYPE_DISABLED,
+	E_TYPE_UNSUPPORTED = DMUS_E_TYPE_UNSUPPORTED,
+	E_TIME_PAST = DMUS_E_TIME_PAST,
+	E_TRACK_NOT_FOUND = DMUS_E_TRACK_NOT_FOUND,
+	E_TRACK_NO_CLOCKTIME_SUPPORT = DMUS_E_TRACK_NO_CLOCKTIME_SUPPORT,
+	E_NO_MASTER_CLOCK = DMUS_E_NO_MASTER_CLOCK,
+	E_LOADER_NOCLASSID = DMUS_E_LOADER_NOCLASSID,
+	E_LOADER_BADPATH = DMUS_E_LOADER_BADPATH,
+	E_LOADER_FAILEDOPEN = DMUS_E_LOADER_FAILEDOPEN,
+	E_LOADER_FORMATNOTSUPPORTED = DMUS_E_LOADER_FORMATNOTSUPPORTED,
+	E_LOADER_FAILEDCREATE = DMUS_E_LOADER_FAILEDCREATE,
+	E_LOADER_OBJECTNOTFOUND = DMUS_E_LOADER_OBJECTNOTFOUND,
+	E_LOADER_NOFILENAME = DMUS_E_LOADER_NOFILENAME,
+	E_INVALIDFILE = DMUS_E_INVALIDFILE,
+	E_ALREADY_EXISTS = DMUS_E_ALREADY_EXISTS,
+	E_OUT_OF_RANGE = DMUS_E_OUT_OF_RANGE,
+	E_SEGMENT_INIT_FAILED = DMUS_E_SEGMENT_INIT_FAILED,
+	E_ALREADY_SENT = DMUS_E_ALREADY_SENT,
+	E_CANNOT_FREE = DMUS_E_CANNOT_FREE,
+	E_CANNOT_OPEN_PORT = DMUS_E_CANNOT_OPEN_PORT,
+	E_CANNOT_CONVERT = DMUS_E_CANNOT_CONVERT,
+	E_DESCEND_CHUNK_FAIL = DMUS_E_DESCEND_CHUNK_FAIL,
+	E_NOT_LOADED = DMUS_E_NOT_LOADED,
+	E_SCRIPT_LANGUAGE_INCOMPATIBLE = DMUS_E_SCRIPT_LANGUAGE_INCOMPATIBLE,
+	E_SCRIPT_UNSUPPORTED_VARTYPE = DMUS_E_SCRIPT_UNSUPPORTED_VARTYPE,
+	E_SCRIPT_ERROR_IN_SCRIPT = DMUS_E_SCRIPT_ERROR_IN_SCRIPT,
+	E_SCRIPT_CANTLOAD_OLEAUT32 = DMUS_E_SCRIPT_CANTLOAD_OLEAUT32,
+	E_SCRIPT_LOADSCRIPT_ERROR = DMUS_E_SCRIPT_LOADSCRIPT_ERROR,
+	E_SCRIPT_INVALID_FILE = DMUS_E_SCRIPT_INVALID_FILE,
+	E_INVALID_SCRIPTTRACK = DMUS_E_INVALID_SCRIPTTRACK,
+	E_SCRIPT_VARIABLE_NOT_FOUND = DMUS_E_SCRIPT_VARIABLE_NOT_FOUND,
+	E_SCRIPT_ROUTINE_NOT_FOUND = DMUS_E_SCRIPT_ROUTINE_NOT_FOUND,
+	E_SCRIPT_CONTENT_READONLY = DMUS_E_SCRIPT_CONTENT_READONLY,
+	E_SCRIPT_NOT_A_REFERENCE = DMUS_E_SCRIPT_NOT_A_REFERENCE,
+	E_SCRIPT_VALUE_NOT_SUPPORTED = DMUS_E_SCRIPT_VALUE_NOT_SUPPORTED,
+	E_INVALID_SEGMENTTRIGGERTRACK = DMUS_E_INVALID_SEGMENTTRIGGERTRACK,
+	E_INVALID_LYRICSTRACK = DMUS_E_INVALID_LYRICSTRACK,
+	E_INVALID_PARAMCONTROLTRACK = DMUS_E_INVALID_PARAMCONTROLTRACK,
+	E_AUDIOVBSCRIPT_SYNTAXERROR = DMUS_E_AUDIOVBSCRIPT_SYNTAXERROR,
+	E_AUDIOVBSCRIPT_RUNTIMEERROR = DMUS_E_AUDIOVBSCRIPT_RUNTIMEERROR,
+	E_AUDIOVBSCRIPT_OPERATIONFAILURE = DMUS_E_AUDIOVBSCRIPT_OPERATIONFAILURE,
+	E_AUDIOPATHS_NOT_VALID = DMUS_E_AUDIOPATHS_NOT_VALID,
+	E_AUDIOPATHS_IN_USE = DMUS_E_AUDIOPATHS_IN_USE,
+	E_NO_AUDIOPATH_CONFIG = DMUS_E_NO_AUDIOPATH_CONFIG,
+	E_AUDIOPATH_INACTIVE = DMUS_E_AUDIOPATH_INACTIVE,
+	E_AUDIOPATH_NOBUFFER = DMUS_E_AUDIOPATH_NOBUFFER,
+	E_AUDIOPATH_NOPORT = DMUS_E_AUDIOPATH_NOPORT,
+	E_NO_AUDIOPATH = DMUS_E_NO_AUDIOPATH,
+	E_INVALIDCHUNK = DMUS_E_INVALIDCHUNK,
+	E_AUDIOPATH_NOGLOBALFXBUFFER = DMUS_E_AUDIOPATH_NOGLOBALFXBUFFER,
+	E_INVALID_CONTAINER_OBJECT = DMUS_E_INVALID_CONTAINER_OBJECT,
+};
+
+public enum class DMUS_CLOCKTYPE
+{
+	DMUS_CLOCK_SYSTEM = ::DMUS_CLOCK_SYSTEM,
+	DMUS_CLOCK_WAVE = ::DMUS_CLOCK_WAVE,
+};
+
+public enum class DMUS_APATH : UInt32
+{
+	SHARED_STEREOPLUSREVERB = DMUS_APATH_SHARED_STEREOPLUSREVERB,
+	DYNAMIC_3D = DMUS_APATH_DYNAMIC_3D,
+	DYNAMIC_MONO = DMUS_APATH_DYNAMIC_MONO,
+	DYNAMIC_STEREO = DMUS_APATH_DYNAMIC_STEREO,
+};
+
+public enum class WAVE_FORMAT : UInt16
+{
+	PCM = WAVE_FORMAT_PCM,
+};
+
+[Flags]
+public enum class F_WSMP : UInt32
+{
+	NO_TRUNCATION = F_WSMP_NO_TRUNCATION,
+	NO_COMPRESSION = F_WSMP_NO_COMPRESSION
+};
+
+[Flags]
+public enum class DMUS_PC : UInt32
+{
+	DLS = DMUS_PC_DLS,
+	EXTERNAL = DMUS_PC_EXTERNAL,
+	SOFTWARESYNTH = DMUS_PC_SOFTWARESYNTH,
+	MEMORYSIZEFIXED = DMUS_PC_MEMORYSIZEFIXED,
+	GMINHARDWARE = DMUS_PC_GMINHARDWARE,
+	GSINHARDWARE = DMUS_PC_GSINHARDWARE,
+	XGINHARDWARE = DMUS_PC_XGINHARDWARE,
+	DIRECTSOUND = DMUS_PC_DIRECTSOUND,
+	SHAREABLE = DMUS_PC_SHAREABLE,
+	DLS2 = DMUS_PC_DLS2,
+	AUDIOPATH = DMUS_PC_AUDIOPATH,
+	WAVE = DMUS_PC_WAVE,
+};
+
+public enum class DMUS_PATH : UInt32
+{
+	SEGMENT = DMUS_PATH_SEGMENT,
+	SEGMENT_TRACK = DMUS_PATH_SEGMENT_TRACK,
+	SEGMENT_GRAPH = DMUS_PATH_SEGMENT_GRAPH,
+	SEGMENT_TOOL = DMUS_PATH_SEGMENT_TOOL,
+	AUDIOPATH = DMUS_PATH_AUDIOPATH,
+	AUDIOPATH_GRAPH = DMUS_PATH_AUDIOPATH_GRAPH,
+	AUDIOPATH_TOOL = DMUS_PATH_AUDIOPATH_TOOL,
+	PERFORMANCE = DMUS_PATH_PERFORMANCE,
+	PERFORMANCE_GRAPH = DMUS_PATH_PERFORMANCE_GRAPH,
+	PERFORMANCE_TOOL = DMUS_PATH_PERFORMANCE_TOOL,
+	PORT = DMUS_PATH_PORT,
+	BUFFER = DMUS_PATH_BUFFER,
+	BUFFER_DMO = DMUS_PATH_BUFFER_DMO,
+	MIXIN_BUFFER = DMUS_PATH_MIXIN_BUFFER,
+	MIXIN_BUFFER_DMO = DMUS_PATH_MIXIN_BUFFER_DMO,
+	PRIMARY_BUFFER = DMUS_PATH_PRIMARY_BUFFER,
+};
+
+[Flags]
+public enum class DMUS_SYNTHSTATS : UInt32
+{
+	VOICES = DMUS_SYNTHSTATS_VOICES,
+	CPU = DMUS_SYNTHSTATS_TOTAL_CPU,
+	CPU_PER_VOICE = DMUS_SYNTHSTATS_CPU_PER_VOICE,
+	FREE_MEMORY = DMUS_SYNTHSTATS_FREE_MEMORY,
+	LOST_NOTES = DMUS_SYNTHSTATS_LOST_NOTES,
+	PEAK_VOLUME = DMUS_SYNTHSTATS_PEAK_VOLUME,
+};
+
+public ref struct DMUS_PCHANNEL abstract sealed
+{
+	static UInt32 ALL = DMUS_PCHANNEL_ALL;
+	static UInt32 BROADCAST_AUDIOPATH = DMUS_PCHANNEL_BROADCAST_AUDIOPATH;
+	static UInt32 BROADCAST_GROUPS = DMUS_PCHANNEL_BROADCAST_GROUPS;
+	static UInt32 BROADCAST_PERFORMANCE = DMUS_PCHANNEL_BROADCAST_PERFORMANCE;
+	static UInt32 BROADCAST_SEGMENT = DMUS_PCHANNEL_BROADCAST_SEGMENT;
+};
+
+public ref struct DMUS_SEG abstract sealed
+{
+	static UInt32 REPEAT_INFINITE = DMUS_SEG_REPEAT_INFINITE;
+	static UInt32 ALLTRACKS = DMUS_SEG_ALLTRACKS;
+	static UInt32 ANYTRACK = DMUS_SEG_ANYTRACK;
+};
+
+public enum class DS3D_APPLY : UInt32
+{
+	IMMEDIATE = DS3D_IMMEDIATE,
+	DEFERRED = DS3D_DEFERRED,
+};
+
+[Flags]
+public enum class DMUS_SEGF : UInt32
+{
+    REFTIME = DMUS_SEGF_REFTIME,
+    SECONDARY = DMUS_SEGF_SECONDARY,
+    SEGF_QUEUE = DMUS_SEGF_QUEUE,
+    CONTROL = DMUS_SEGF_CONTROL,
+    AFTERPREPARETIME = DMUS_SEGF_AFTERPREPARETIME,
+    GRID = DMUS_SEGF_GRID,
+    BEAT = DMUS_SEGF_BEAT,
+    MEASURE = DMUS_SEGF_MEASURE,
+    DEFAULT = DMUS_SEGF_DEFAULT,
+    NOINVALIDATE = DMUS_SEGF_NOINVALIDATE,
+    ALIGN = DMUS_SEGF_ALIGN,
+    VALID_START_BEAT = DMUS_SEGF_VALID_START_BEAT,
+    VALID_START_GRID = DMUS_SEGF_VALID_START_GRID,
+    VALID_START_TICK = DMUS_SEGF_VALID_START_TICK,
+    AUTOTRANSITION = DMUS_SEGF_AUTOTRANSITION,
+    AFTERQUEUETIME = DMUS_SEGF_AFTERQUEUETIME,
+    AFTERLATENCYTIME = DMUS_SEGF_AFTERLATENCYTIME,
+    SEGMENTEND = DMUS_SEGF_SEGMENTEND,
+    MARKER = DMUS_SEGF_MARKER,
+    TIMESIG_ALWAYS = DMUS_SEGF_TIMESIG_ALWAYS,
+    USE_AUDIOPATH = DMUS_SEGF_USE_AUDIOPATH,
+    VALID_START_MEASURE = DMUS_SEGF_VALID_START_MEASURE,
+    INVALIDATE_PRI = DMUS_SEGF_INVALIDATE_PRI,
+};
+
+[Flags]
+public enum class DMUS_AUDIOF : UInt32
+{
+	F_3D = DMUS_AUDIOF_3D,
+	ENVIRON = DMUS_AUDIOF_ENVIRON,
+	EAX = DMUS_AUDIOF_EAX,
+	DMOS = DMUS_AUDIOF_DMOS,
+	STREAMING = DMUS_AUDIOF_STREAMING,
+	BUFFERS = DMUS_AUDIOF_BUFFERS,
+	ALL = DMUS_AUDIOF_ALL,
+};
+
+[Flags]
+public enum class DMUS_AUDIOP : UInt32
+{
+	FEATURES = DMUS_AUDIOPARAMS_FEATURES,
+	VOICES = DMUS_AUDIOPARAMS_VOICES,
+	SAMPLERATE = DMUS_AUDIOPARAMS_SAMPLERATE,
+	DEFAULTSYNTH = DMUS_AUDIOPARAMS_DEFAULTSYNTH,
+};
+
+public ref struct GUID_DMUS_PROP abstract sealed
+{
+	static Guid DLS1 = toGuid(GUID_DMUS_PROP_DLS1);
+	static Guid DLS2 = toGuid(GUID_DMUS_PROP_DLS2);
+	static Guid Effects = toGuid(GUID_DMUS_PROP_Effects);
+	static Guid GM_Hardware = toGuid(GUID_DMUS_PROP_GM_Hardware);
+	static Guid GS_Capable = toGuid(GUID_DMUS_PROP_GS_Capable);
+	static Guid GS_Hardware = toGuid(GUID_DMUS_PROP_GS_Hardware);
+	static Guid INSTRUMENT2 = toGuid(GUID_DMUS_PROP_INSTRUMENT2);
+	static Guid LegacyCaps = toGuid(GUID_DMUS_PROP_LegacyCaps);
+	static Guid MemorySize = toGuid(GUID_DMUS_PROP_MemorySize);
+	static Guid SampleMemorySize = toGuid(GUID_DMUS_PROP_SampleMemorySize);
+	static Guid SamplePlaybackRate = toGuid(GUID_DMUS_PROP_SamplePlaybackRate);
+	static Guid SynthSink_DSOUND = toGuid(GUID_DMUS_PROP_SynthSink_DSOUND);
+	static Guid SynthSink_WAVE = toGuid(GUID_DMUS_PROP_SynthSink_WAVE);
+	static Guid Volume = toGuid(GUID_DMUS_PROP_Volume);
+	static Guid WavesReverb = toGuid(GUID_DMUS_PROP_WavesReverb);
+	static Guid WriteLatency = toGuid(GUID_DMUS_PROP_WriteLatency);
+	static Guid WritePeriod = toGuid(GUID_DMUS_PROP_WritePeriod);
+	static Guid XG_Capable = toGuid(GUID_DMUS_PROP_XG_Capable);
+	static Guid XG_Hardware = toGuid(GUID_DMUS_PROP_XG_Hardware);
+};
+
+[Flags]
+public enum class KSPROPERTY_TYPE : UInt32
+{
+	GET = KSPROPERTY_TYPE_GET,
+	SET = KSPROPERTY_TYPE_SET,
+	BASICSUPPORT = KSPROPERTY_TYPE_BASICSUPPORT,
+};
+
+public ref class DMUS_AUDIOPARAMS : public WrapperBase<::DMUS_AUDIOPARAMS>
+{
+public:
+    WRAPPER_PROPERTY(UInt32, dwSize);
+    WRAPPER_PROPERTY_DIFFCAST(Boolean, BOOL, fInitNow);
+    WRAPPER_PROPERTY_DIFFCAST(DMUS_AUDIOP, DWORD, dwValidData);
+    WRAPPER_PROPERTY_DIFFCAST(DMUS_AUDIOF, DWORD, dwFeatures);
+    WRAPPER_PROPERTY(UInt32, dwVoices);
+    WRAPPER_PROPERTY(UInt32, dwSampleRate);
+	WRAPPER_PROPERTY_GUID(clsidDefaultSynth);
+
+	DMUS_AUDIOPARAMS() { dwSize = sizeof(TBASE); }
+};
+
+WRAPPER_STRUCT(RGNRANGE, ::RGNRANGE)
+	WRAPPER_STRUCT_MEMBER(UInt16, usLow);
+	WRAPPER_STRUCT_MEMBER(UInt16, usHigh);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_LFOPARAMS, ::DMUS_LFOPARAMS)
+	WRAPPER_STRUCT_MEMBER(Int32, pcFrequency);
+	WRAPPER_STRUCT_MEMBER(Int32, tcDelay);
+	WRAPPER_STRUCT_MEMBER(Int32, gcVolumeScale);
+	WRAPPER_STRUCT_MEMBER(Int32, pcPitchScale);
+	WRAPPER_STRUCT_MEMBER(Int32, gcMWToVolume);
+	WRAPPER_STRUCT_MEMBER(Int32, pcMWToPitch);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_VEGPARAMS, ::DMUS_VEGPARAMS)
+	WRAPPER_STRUCT_MEMBER(Int32, tcAttack);
+	WRAPPER_STRUCT_MEMBER(Int32, tcDecay);
+	WRAPPER_STRUCT_MEMBER(Int32, ptSustain);
+	WRAPPER_STRUCT_MEMBER(Int32, tcRelease);
+	WRAPPER_STRUCT_MEMBER(Int32, tcVel2Attack);
+	WRAPPER_STRUCT_MEMBER(Int32, tcKey2Decay);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_PEGPARAMS, ::DMUS_PEGPARAMS)
+	WRAPPER_STRUCT_MEMBER(Int32, tcAttack);
+	WRAPPER_STRUCT_MEMBER(Int32, tcDecay);
+	WRAPPER_STRUCT_MEMBER(Int32, ptSustain);
+	WRAPPER_STRUCT_MEMBER(Int32, tcRelease);
+	WRAPPER_STRUCT_MEMBER(Int32, tcVel2Attack);
+	WRAPPER_STRUCT_MEMBER(Int32, tcKey2Decay);
+	WRAPPER_STRUCT_MEMBER(Int32, pcRange);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_MSCPARAMS, ::DMUS_MSCPARAMS)
+	WRAPPER_STRUCT_MEMBER(Int32, ptDefaultPan);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(D3DVECTOR, ::D3DVECTOR)
+    WRAPPER_STRUCT_MEMBER(Single, x);
+    WRAPPER_STRUCT_MEMBER(Single, y);
+    WRAPPER_STRUCT_MEMBER(Single, z);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_TIMESIGNATURE, ::DMUS_TIMESIGNATURE)
+    WRAPPER_STRUCT_MEMBER(Int32, mtTime);
+    WRAPPER_STRUCT_MEMBER(Byte, bBeatsPerMeasure);
+    WRAPPER_STRUCT_MEMBER(Byte, bBeat);
+    WRAPPER_STRUCT_MEMBER(UInt16, wGridsPerBeat);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DS3DBUFFER, ::DS3DBUFFER)
+    WRAPPER_STRUCT_MEMBER(UInt32, dwSize);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vPosition);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vVelocity);
+    WRAPPER_STRUCT_MEMBER(UInt32, dwInsideConeAngle);
+    WRAPPER_STRUCT_MEMBER(UInt32, dwOutsideConeAngle);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vConeOrientation);
+    WRAPPER_STRUCT_MEMBER(Int32, lConeOutsideVolume);
+    WRAPPER_STRUCT_MEMBER(Single, flMinDistance);
+    WRAPPER_STRUCT_MEMBER(Single, flMaxDistance);
+    WRAPPER_STRUCT_MEMBER(Int32, dwMode);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DS3DLISTENER, ::DS3DLISTENER)
+    WRAPPER_STRUCT_MEMBER(UInt32, dwSize);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vPosition);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vVelocity);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vOrientFront);
+    WRAPPER_STRUCT_MEMBER(D3DVECTOR, vOrientTop);
+    WRAPPER_STRUCT_MEMBER(Single, flDistanceFactor);
+    WRAPPER_STRUCT_MEMBER(Single, flRolloffFactor);
+    WRAPPER_STRUCT_MEMBER(Single, flDopplerFactor);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(WAVEFORMATEX, ::WAVEFORMATEX)
+	WRAPPER_STRUCT_MEMBER(WAVE_FORMAT, wFormatTag);
+	WRAPPER_STRUCT_MEMBER(UInt16, nChannels);
+	WRAPPER_STRUCT_MEMBER(UInt32, nSamplesPerSec);
+	WRAPPER_STRUCT_MEMBER(UInt32, nAvgBytesPerSec);
+	WRAPPER_STRUCT_MEMBER(UInt16, nBlockAlign);
+	WRAPPER_STRUCT_MEMBER(UInt16, wBitsPerSample);
+	WRAPPER_STRUCT_MEMBER(UInt16, cbSize);
+WRAPPER_STRUCT_END;
+
+//
+//
+//		Structures / guids used in SetParam / GetParam
+//
+//
+public ref struct ParamGUID abstract sealed
+{
+	static Guid BandParam = toGuid(GUID_BandParam);
+	static Guid ChordParam = toGuid(GUID_ChordParam);
+	static Guid Clear_All_Bands = toGuid(GUID_Clear_All_Bands);
+	static Guid CommandParam = toGuid(GUID_CommandParam);
+	static Guid CommandParam2 = toGuid(GUID_CommandParam2);
+	static Guid CommandParamNext = toGuid(GUID_CommandParamNext);
+	static Guid ConnectToDLSCollection = toGuid(GUID_ConnectToDLSCollection);
+	static Guid Disable_Auto_Download = toGuid(GUID_Disable_Auto_Download);
+	static Guid DisableTempo = toGuid(GUID_DisableTempo);
+	static Guid DisableTimeSig = toGuid(GUID_DisableTimeSig);
+	static Guid Download = toGuid(GUID_Download);
+	static Guid DownloadToAudioPath = toGuid(GUID_DownloadToAudioPath);
+	static Guid Enable_Auto_Download = toGuid(GUID_Enable_Auto_Download);
+	static Guid EnableTempo = toGuid(GUID_EnableTempo);
+	static Guid EnableTimeSig = toGuid(GUID_EnableTimeSig);
+	static Guid IDirectMusicBand = toGuid(GUID_IDirectMusicBand);
+	static Guid IDirectMusicChordMap = toGuid(GUID_IDirectMusicChordMap);
+	static Guid IDirectMusicStyle = toGuid(GUID_IDirectMusicStyle);
+	static Guid MuteParam = toGuid(GUID_MuteParam);
+	static Guid Play_Marker = toGuid(GUID_Play_Marker);
+	static Guid RhythmParam = toGuid(GUID_RhythmParam);
+	static Guid SeedVariations = toGuid(GUID_SeedVariations);
+	static Guid StandardMIDIFile = toGuid(GUID_StandardMIDIFile);
+	static Guid TempoParam = toGuid(GUID_TempoParam);
+	static Guid TimeSignature = toGuid(GUID_TimeSignature);
+	static Guid Unload = toGuid(GUID_Unload);
+	static Guid UnloadFromAudioPath = toGuid(GUID_UnloadFromAudioPath);
+	static Guid Valid_Start_Time = toGuid(GUID_Valid_Start_Time);
+	static Guid Variations = toGuid(GUID_Variations);
+};
+
+WRAPPER_STRUCT(DMUS_COMMAND_PARAM, ::DMUS_COMMAND_PARAM)
+	WRAPPER_STRUCT_MEMBER(Byte, bCommand);
+	WRAPPER_STRUCT_MEMBER(Byte, bGrooveLevel);
+	WRAPPER_STRUCT_MEMBER(Byte, bGrooveRange);
+	WRAPPER_STRUCT_MEMBER(Byte, bRepeatMode);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_COMMAND_PARAM_2, ::DMUS_COMMAND_PARAM_2)
+	WRAPPER_STRUCT_MEMBER(Int32, mtTime);
+	WRAPPER_STRUCT_MEMBER(Byte, bCommand);
+	WRAPPER_STRUCT_MEMBER(Byte, bGrooveLevel);
+	WRAPPER_STRUCT_MEMBER(Byte, bGrooveRange);
+	WRAPPER_STRUCT_MEMBER(Byte, bRepeatMode);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_PLAY_MARKER_PARAM, ::DMUS_PLAY_MARKER_PARAM)
+	WRAPPER_STRUCT_MEMBER(Int32, mtTime);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_RHYTHM_PARAM, ::DMUS_RHYTHM_PARAM)
+    WRAPPER_STRUCT_MEMBER(DMUS_TIMESIGNATURE, TimeSig);
+    WRAPPER_STRUCT_MEMBER(UInt32, dwRhythmPattern);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_TEMPO_PARAM, ::DMUS_TEMPO_PARAM)
+	WRAPPER_STRUCT_MEMBER(Int32, mtTime);
+	WRAPPER_STRUCT_MEMBER(Double, dblTempo);
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_MUTE_PARAM, ::DMUS_MUTE_PARAM)
+	WRAPPER_STRUCT_MEMBER(UInt32, dwPChannel);
+	WRAPPER_STRUCT_MEMBER(UInt32, dwPChannelMap);
+private:    WRAPPER_STRUCT_MEMBER(Int32, fMute);
+public:	    property Boolean Mute { Boolean get() { return fMute != FALSE; } void set(Boolean val) { fMute = val ? true : false; } }
+WRAPPER_STRUCT_END;
+
+WRAPPER_STRUCT(DMUS_VALID_START_PARAM, ::DMUS_VALID_START_PARAM)
+	WRAPPER_STRUCT_MEMBER(Int32, mtTime);
+WRAPPER_STRUCT_END;
+
+
+
+//
+//
+//		Interfaces for GetObjectInPath
+//
+//
+public ref struct DX_GUID abstract sealed
+{
+	static Guid All_Objects = toGuid(GUID_All_Objects);
+};
+
+//
+//	IDirectSoundFXWavesReverb
+//
+public ref struct DSFX_WAVESREVERB abstract sealed
+{
+	static Single INGAIN_MIN = DSFX_WAVESREVERB_INGAIN_MIN;
+	static Single INGAIN_MAX = DSFX_WAVESREVERB_INGAIN_MAX;
+	static Single INGAIN_DEFAULT = DSFX_WAVESREVERB_INGAIN_DEFAULT;
+
+	static Single REVERBMIX_MIN = DSFX_WAVESREVERB_REVERBMIX_MIN;
+	static Single REVERBMIX_MAX = DSFX_WAVESREVERB_REVERBMIX_MAX;
+	static Single REVERBMIX_DEFAULT = DSFX_WAVESREVERB_REVERBMIX_DEFAULT;
+
+	static Single REVERBTIME_MIN = DSFX_WAVESREVERB_REVERBTIME_MIN;
+	static Single REVERBTIME_MAX = DSFX_WAVESREVERB_REVERBTIME_MAX;
+	static Single REVERBTIME_DEFAULT = DSFX_WAVESREVERB_REVERBTIME_DEFAULT;
+
+	static Single HIGHFREQRTRATIO_MIN = DSFX_WAVESREVERB_HIGHFREQRTRATIO_MIN;
+	static Single HIGHFREQRTRATIO_MAX = DSFX_WAVESREVERB_HIGHFREQRTRATIO_MAX;
+	static Single HIGHFREQRTRATIO_DEFAULT = DSFX_WAVESREVERB_HIGHFREQRTRATIO_DEFAULT;
+};
+
+WRAPPER_STRUCT(DSFXWavesReverb, ::DSFXWavesReverb)
+	WRAPPER_STRUCT_MEMBER(Single, fInGain);
+	WRAPPER_STRUCT_MEMBER(Single, fReverbMix);
+	WRAPPER_STRUCT_MEMBER(Single, fReverbTime);
+	WRAPPER_STRUCT_MEMBER(Single, fHighFreqRTRatio);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXWavesReverb : public ComWrapperBase<::IDirectSoundFXWavesReverb>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXWavesReverb% pcDsFxWavesReverb);
+    HR_DMUS GetAllParameters([Out] DSFXWavesReverb% pDsFxWavesReverb);
+
+internal:
+	IDirectSoundFXWavesReverb(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXGargle
+//
+public ref struct DSFXGARGLE abstract sealed
+{
+	static UInt32 WAVE_TRIANGLE = DSFXGARGLE_WAVE_TRIANGLE;
+	static UInt32 WAVE_SQUARE = DSFXGARGLE_WAVE_SQUARE;
+
+	static UInt32 RATEHZ_MIN = DSFXGARGLE_RATEHZ_MIN;
+	static UInt32 RATEHZ_MAX = DSFXGARGLE_RATEHZ_MAX;
+};
+
+WRAPPER_STRUCT(DSFXGargle, ::DSFXGargle)
+	WRAPPER_STRUCT_MEMBER(UInt32, dwRateHz);
+	WRAPPER_STRUCT_MEMBER(UInt32, dwWaveShape);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXGargle : public ComWrapperBase<::IDirectSoundFXGargle>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXGargle% pcDsFxGargle);
+    HR_DMUS GetAllParameters([Out] DSFXGargle% pDsFxGargle);
+
+internal:
+	IDirectSoundFXGargle(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXChorus
+//
+public enum class DSFXCHORUS_WAVE : Int32
+{
+	TRIANGLE = DSFXCHORUS_WAVE_TRIANGLE,
+	SIN = DSFXCHORUS_WAVE_SIN
+};
+
+public enum class DSFXCHORUS_PHASE : Int32
+{
+	P_MIN = DSFXCHORUS_PHASE_MIN,
+	P_MAX = DSFXCHORUS_PHASE_MAX,
+
+	PHASE_NEG_180 = DSFXCHORUS_PHASE_NEG_180,
+	PHASE_NEG_90 = DSFXCHORUS_PHASE_NEG_90,
+	PHASE_ZERO = DSFXCHORUS_PHASE_ZERO,
+	PHASE_90 = DSFXCHORUS_PHASE_90,
+	PHASE_180 = DSFXCHORUS_PHASE_180,
+};
+
+public ref struct DSFXCHORUS abstract sealed
+{
+	static Single WETDRYMIX_MIN = DSFXCHORUS_WETDRYMIX_MIN;
+	static Single WETDRYMIX_MAX = DSFXCHORUS_WETDRYMIX_MAX;
+
+	static Single DEPTH_MIN = DSFXCHORUS_DEPTH_MIN;
+	static Single DEPTH_MAX = DSFXCHORUS_DEPTH_MAX;
+
+	static Single FEEDBACK_MIN = DSFXCHORUS_FEEDBACK_MIN;
+	static Single FEEDBACK_MAX = DSFXCHORUS_FEEDBACK_MAX;
+
+	static Single FREQUENCY_MIN = DSFXCHORUS_FREQUENCY_MIN;
+	static Single FREQUENCY_MAX = DSFXCHORUS_FREQUENCY_MAX;
+
+	static Single DELAY_MIN = DSFXCHORUS_DELAY_MIN;
+	static Single DELAY_MAX = DSFXCHORUS_DELAY_MAX;
+
+	static Single PHASE_MIN = DSFXCHORUS_PHASE_MIN;
+	static Single PHASE_MAX = DSFXCHORUS_PHASE_MAX;
+};
+
+WRAPPER_STRUCT(DSFXChorus, ::DSFXChorus)
+	WRAPPER_STRUCT_MEMBER(Single, fWetDryMix);
+	WRAPPER_STRUCT_MEMBER(Single, fDepth);
+	WRAPPER_STRUCT_MEMBER(Single, fFeedback);
+	WRAPPER_STRUCT_MEMBER(Single, fFrequency);
+	WRAPPER_STRUCT_MEMBER(DSFXCHORUS_WAVE, lWaveform);
+	WRAPPER_STRUCT_MEMBER(Single, fDelay);
+	WRAPPER_STRUCT_MEMBER(DSFXCHORUS_PHASE, lPhase);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXChorus : public ComWrapperBase<::IDirectSoundFXChorus>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXChorus% pcDsFxChorus);
+    HR_DMUS GetAllParameters([Out] DSFXChorus% pDsFxChorus);
+
+internal:
+	IDirectSoundFXChorus(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+
+//
+//	IDirectSoundFXFlanger
+//
+public enum class DSFXFLANGER_WAVE : Int32
+{
+	TRIANGLE = DSFXFLANGER_WAVE_TRIANGLE,
+	SIN = DSFXFLANGER_WAVE_SIN,
+};
+
+public enum class DSFXFLANGER_PHASE : Int32
+{
+	P_MIN = DSFXFLANGER_PHASE_MIN,
+	P_MAX = DSFXFLANGER_PHASE_MAX,
+
+	PHASE_NEG_180 = DSFXFLANGER_PHASE_NEG_180,
+	PHASE_NEG_90 = DSFXFLANGER_PHASE_NEG_90,
+	PHASE_ZERO = DSFXFLANGER_PHASE_ZERO,
+	PHASE_90 = DSFXFLANGER_PHASE_90,
+	PHASE_180 = DSFXFLANGER_PHASE_180,
+};
+
+public ref struct DSFXFLANGER abstract sealed
+{
+	static Single WETDRYMIX_MIN = DSFXFLANGER_WETDRYMIX_MIN;
+	static Single WETDRYMIX_MAX = DSFXFLANGER_WETDRYMIX_MAX;
+
+	static Single DEPTH_MIN = DSFXFLANGER_DEPTH_MIN;
+	static Single DEPTH_MAX = DSFXFLANGER_DEPTH_MAX;
+
+	static Single FEEDBACK_MIN = DSFXFLANGER_FEEDBACK_MIN;
+	static Single FEEDBACK_MAX = DSFXFLANGER_FEEDBACK_MAX;
+
+	static Single FREQUENCY_MIN = DSFXFLANGER_FREQUENCY_MIN;
+	static Single FREQUENCY_MAX = DSFXFLANGER_FREQUENCY_MAX;
+
+	static Single DELAY_MIN = DSFXFLANGER_DELAY_MIN;
+	static Single DELAY_MAX = DSFXFLANGER_DELAY_MAX;
+
+	static Single PHASE_MIN = DSFXFLANGER_PHASE_MIN;
+	static Single PHASE_MAX = DSFXFLANGER_PHASE_MAX;
+};
+
+WRAPPER_STRUCT(DSFXFlanger, ::DSFXFlanger)
+	WRAPPER_STRUCT_MEMBER(Single, fWetDryMix);
+	WRAPPER_STRUCT_MEMBER(Single, fDepth);
+	WRAPPER_STRUCT_MEMBER(Single, fFeedback);
+	WRAPPER_STRUCT_MEMBER(Single, fFrequency);
+	WRAPPER_STRUCT_MEMBER(DSFXFLANGER_WAVE, lWaveform);
+	WRAPPER_STRUCT_MEMBER(Single, fDelay);
+	WRAPPER_STRUCT_MEMBER(DSFXFLANGER_PHASE, lPhase);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXFlanger : public ComWrapperBase<::IDirectSoundFXFlanger>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXFlanger% pcDsFxFlanger);
+    HR_DMUS GetAllParameters([Out] DSFXFlanger% pDsFxFlanger);
+
+internal:
+	IDirectSoundFXFlanger(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+
+//
+//	IDirectSoundFXEcho
+//
+public enum class DSFXECHO_PANDELAY : Int32
+{
+	D_MIN = DSFXECHO_PANDELAY_MIN,
+	D_MAX = DSFXECHO_PANDELAY_MAX,
+};
+
+public ref struct DSFXECHO abstract sealed
+{
+	static Single WETDRYMIX_MIN = DSFXECHO_WETDRYMIX_MIN;
+	static Single WETDRYMIX_MAX = DSFXECHO_WETDRYMIX_MAX;
+
+	static Single FEEDBACK_MIN = DSFXECHO_FEEDBACK_MIN;
+	static Single FEEDBACK_MAX = DSFXECHO_FEEDBACK_MAX;
+
+	static Single LEFTDELAY_MIN = DSFXECHO_LEFTDELAY_MIN;
+	static Single LEFTDELAY_MAX = DSFXECHO_LEFTDELAY_MAX;
+
+	static Single RIGHTDELAY_MIN = DSFXECHO_RIGHTDELAY_MIN;
+	static Single RIGHTDELAY_MAX = DSFXECHO_RIGHTDELAY_MAX;
+};
+
+WRAPPER_STRUCT(DSFXEcho, ::DSFXEcho)
+	WRAPPER_STRUCT_MEMBER(Single, fWetDryMix);
+	WRAPPER_STRUCT_MEMBER(Single, fFeedback);
+	WRAPPER_STRUCT_MEMBER(Single, fLeftDelay);
+	WRAPPER_STRUCT_MEMBER(Single, fRightDelay);
+	WRAPPER_STRUCT_MEMBER(DSFXECHO_PANDELAY, lPanDelay);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXEcho : public ComWrapperBase<::IDirectSoundFXEcho>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXEcho% pcDsFxEcho);
+    HR_DMUS GetAllParameters([Out] DSFXEcho% pDsFxEcho);
+
+internal:
+	IDirectSoundFXEcho(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXDistortion
+//
+public ref struct DSFXDISTORTION abstract sealed
+{
+	static Single GAIN_MIN = DSFXDISTORTION_GAIN_MIN;
+	static Single GAIN_MAX = DSFXDISTORTION_GAIN_MAX;
+
+	static Single EDGE_MIN = DSFXDISTORTION_EDGE_MIN;
+	static Single EDGE_MAX = DSFXDISTORTION_EDGE_MAX;
+
+	static Single POSTEQCENTERFREQUENCY_MIN = DSFXDISTORTION_POSTEQCENTERFREQUENCY_MIN;
+	static Single POSTEQCENTERFREQUENCY_MAX = DSFXDISTORTION_POSTEQCENTERFREQUENCY_MAX;
+
+	static Single POSTEQBANDWIDTH_MIN = DSFXDISTORTION_POSTEQBANDWIDTH_MIN;
+	static Single POSTEQBANDWIDTH_MAX = DSFXDISTORTION_POSTEQBANDWIDTH_MAX;
+
+	static Single PRELOWPASSCUTOFF_MIN = DSFXDISTORTION_PRELOWPASSCUTOFF_MIN;
+	static Single PRELOWPASSCUTOFF_MAX = DSFXDISTORTION_PRELOWPASSCUTOFF_MAX;
+};
+
+WRAPPER_STRUCT(DSFXDistortion, ::DSFXDistortion)
+	WRAPPER_STRUCT_MEMBER(Single, fGain);
+	WRAPPER_STRUCT_MEMBER(Single, fEdge);
+	WRAPPER_STRUCT_MEMBER(Single, fPostEQCenterFrequency);
+	WRAPPER_STRUCT_MEMBER(Single, fPostEQBandwidth);
+	WRAPPER_STRUCT_MEMBER(Single, fPreLowpassCutoff);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXDistortion : public ComWrapperBase<::IDirectSoundFXDistortion>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXDistortion% pcDsFxDistortion);
+    HR_DMUS GetAllParameters([Out] DSFXDistortion% pDsFxDistortion);
+
+internal:
+	IDirectSoundFXDistortion(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXCompressor
+//
+public ref struct DSFXCOMPRESSOR abstract sealed
+{
+	static Single GAIN_MIN = DSFXCOMPRESSOR_GAIN_MIN;
+	static Single GAIN_MAX = DSFXCOMPRESSOR_GAIN_MAX;
+
+	static Single ATTACK_MIN = DSFXCOMPRESSOR_ATTACK_MIN;
+	static Single ATTACK_MAX = DSFXCOMPRESSOR_ATTACK_MAX;
+
+	static Single RELEASE_MIN = DSFXCOMPRESSOR_RELEASE_MIN;
+	static Single RELEASE_MAX = DSFXCOMPRESSOR_RELEASE_MAX;
+
+	static Single THRESHOLD_MIN = DSFXCOMPRESSOR_THRESHOLD_MIN;
+	static Single THRESHOLD_MAX = DSFXCOMPRESSOR_THRESHOLD_MAX;
+
+	static Single RATIO_MIN = DSFXCOMPRESSOR_RATIO_MIN;
+	static Single RATIO_MAX = DSFXCOMPRESSOR_RATIO_MAX;
+
+	static Single PREDELAY_MIN = DSFXCOMPRESSOR_PREDELAY_MIN;
+	static Single PREDELAY_MAX = DSFXCOMPRESSOR_PREDELAY_MAX;
+};
+
+WRAPPER_STRUCT(DSFXCompressor, ::DSFXCompressor)
+	WRAPPER_STRUCT_MEMBER(Single, fGain);
+	WRAPPER_STRUCT_MEMBER(Single, fAttack);
+	WRAPPER_STRUCT_MEMBER(Single, fRelease);
+	WRAPPER_STRUCT_MEMBER(Single, fThreshold);
+	WRAPPER_STRUCT_MEMBER(Single, fRatio);
+	WRAPPER_STRUCT_MEMBER(Single, fPredelay);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXCompressor : public ComWrapperBase<::IDirectSoundFXCompressor>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXCompressor% pcDsFxCompressor);
+    HR_DMUS GetAllParameters([Out] DSFXCompressor% pDsFxCompressor);
+
+internal:
+	IDirectSoundFXCompressor(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXParamEq
+//
+public ref struct DSFXPARAMEQ abstract sealed
+{
+	static Single CENTER_MIN = DSFXPARAMEQ_CENTER_MIN;
+	static Single CENTER_MAX = DSFXPARAMEQ_CENTER_MAX;
+
+	static Single BANDWIDTH_MIN = DSFXPARAMEQ_BANDWIDTH_MIN;
+	static Single BANDWIDTH_MAX = DSFXPARAMEQ_BANDWIDTH_MAX;
+
+	static Single GAIN_MIN = DSFXPARAMEQ_GAIN_MIN;
+	static Single GAIN_MAX = DSFXPARAMEQ_GAIN_MAX;
+};
+
+WRAPPER_STRUCT(DSFXParamEq, ::DSFXParamEq)
+	WRAPPER_STRUCT_MEMBER(Single, fCenter);
+	WRAPPER_STRUCT_MEMBER(Single, fBandwidth);
+	WRAPPER_STRUCT_MEMBER(Single, fGain);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXParamEq : public ComWrapperBase<::IDirectSoundFXParamEq>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXParamEq% pcDsFxParamEq);
+    HR_DMUS GetAllParameters([Out] DSFXParamEq% pDsFxParamEq);
+
+internal:
+	IDirectSoundFXParamEq(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+//
+//	IDirectSoundFXI3DL2Reverb
+//
+
+public ref struct DSFX_I3DL2REVERB abstract sealed
+{
+	static Int32 ROOM_MIN = DSFX_I3DL2REVERB_ROOM_MIN;
+	static Int32 ROOM_MAX = DSFX_I3DL2REVERB_ROOM_MAX;
+	static Int32 ROOM_DEFAULT = DSFX_I3DL2REVERB_ROOM_DEFAULT;
+
+	static Int32 ROOMHF_MIN = DSFX_I3DL2REVERB_ROOMHF_MIN;
+	static Int32 ROOMHF_MAX = DSFX_I3DL2REVERB_ROOMHF_MAX;
+	static Int32 ROOMHF_DEFAULT = DSFX_I3DL2REVERB_ROOMHF_DEFAULT;
+
+	static Single ROOMROLLOFFFACTOR_MIN = DSFX_I3DL2REVERB_ROOMROLLOFFFACTOR_MIN;
+	static Single ROOMROLLOFFFACTOR_MAX = DSFX_I3DL2REVERB_ROOMROLLOFFFACTOR_MAX;
+	static Single ROOMROLLOFFFACTOR_DEFAULT = DSFX_I3DL2REVERB_ROOMROLLOFFFACTOR_DEFAULT;
+
+	static Single DECAYTIME_MIN = DSFX_I3DL2REVERB_DECAYTIME_MIN;
+	static Single DECAYTIME_MAX = DSFX_I3DL2REVERB_DECAYTIME_MAX;
+	static Single DECAYTIME_DEFAULT = DSFX_I3DL2REVERB_DECAYTIME_DEFAULT;
+
+	static Single DECAYHFRATIO_MIN = DSFX_I3DL2REVERB_DECAYHFRATIO_MIN;
+	static Single DECAYHFRATIO_MAX = DSFX_I3DL2REVERB_DECAYHFRATIO_MAX;
+	static Single DECAYHFRATIO_DEFAULT = DSFX_I3DL2REVERB_DECAYHFRATIO_DEFAULT;
+
+	static Int32 REFLECTIONS_MIN = DSFX_I3DL2REVERB_REFLECTIONS_MIN;
+	static Int32 REFLECTIONS_MAX = DSFX_I3DL2REVERB_REFLECTIONS_MAX;
+	static Int32 REFLECTIONS_DEFAULT = DSFX_I3DL2REVERB_REFLECTIONS_DEFAULT;
+
+	static Single REFLECTIONSDELAY_MIN = DSFX_I3DL2REVERB_REFLECTIONSDELAY_MIN;
+	static Single REFLECTIONSDELAY_MAX = DSFX_I3DL2REVERB_REFLECTIONSDELAY_MAX;
+	static Single REFLECTIONSDELAY_DEFAULT = DSFX_I3DL2REVERB_REFLECTIONSDELAY_DEFAULT;
+
+	static Int32 REVERB_MIN = DSFX_I3DL2REVERB_REVERB_MIN;
+	static Int32 REVERB_MAX = DSFX_I3DL2REVERB_REVERB_MAX;
+	static Int32 REVERB_DEFAULT = DSFX_I3DL2REVERB_REVERB_DEFAULT;
+
+	static Single REVERBDELAY_MIN = DSFX_I3DL2REVERB_REVERBDELAY_MIN;
+	static Single REVERBDELAY_MAX = DSFX_I3DL2REVERB_REVERBDELAY_MAX;
+	static Single REVERBDELAY_DEFAULT = DSFX_I3DL2REVERB_REVERBDELAY_DEFAULT;
+
+	static Single DIFFUSION_MIN = DSFX_I3DL2REVERB_DIFFUSION_MIN;
+	static Single DIFFUSION_MAX = DSFX_I3DL2REVERB_DIFFUSION_MAX;
+	static Single DIFFUSION_DEFAULT = DSFX_I3DL2REVERB_DIFFUSION_DEFAULT;
+
+	static Single DENSITY_MIN = DSFX_I3DL2REVERB_DENSITY_MIN;
+	static Single DENSITY_MAX = DSFX_I3DL2REVERB_DENSITY_MAX;
+	static Single DENSITY_DEFAULT = DSFX_I3DL2REVERB_DENSITY_DEFAULT;
+
+	static Single HFREFERENCE_MIN = DSFX_I3DL2REVERB_HFREFERENCE_MIN;
+	static Single HFREFERENCE_MAX = DSFX_I3DL2REVERB_HFREFERENCE_MAX;
+	static Single HFREFERENCE_DEFAULT = DSFX_I3DL2REVERB_HFREFERENCE_DEFAULT;
+
+	static Int32 QUALITY_MIN = DSFX_I3DL2REVERB_QUALITY_MIN;
+	static Int32 QUALITY_MAX = DSFX_I3DL2REVERB_QUALITY_MAX;
+	static Int32 QUALITY_DEFAULT = DSFX_I3DL2REVERB_QUALITY_DEFAULT;
+};
+
+WRAPPER_STRUCT(DSFXI3DL2Reverb, ::DSFXI3DL2Reverb)
+	WRAPPER_STRUCT_MEMBER(Int32, lRoom);
+	WRAPPER_STRUCT_MEMBER(Int32, lRoomHF);
+	WRAPPER_STRUCT_MEMBER(Single, flRoomRolloffFactor);
+	WRAPPER_STRUCT_MEMBER(Single, flDecayTime);
+	WRAPPER_STRUCT_MEMBER(Single, flDecayHFRatio);
+	WRAPPER_STRUCT_MEMBER(Int32, lReflections);
+	WRAPPER_STRUCT_MEMBER(Single, flReflectionsDelay);
+	WRAPPER_STRUCT_MEMBER(Int32, lReverb);
+	WRAPPER_STRUCT_MEMBER(Single, flReverbDelay);
+	WRAPPER_STRUCT_MEMBER(Single, flDiffusion);
+	WRAPPER_STRUCT_MEMBER(Single, flDensity);
+	WRAPPER_STRUCT_MEMBER(Single, flHFReference);
+WRAPPER_STRUCT_END;
+
+public ref class IDirectSoundFXI3DL2Reverb : public ComWrapperBase<::IDirectSoundFXI3DL2Reverb>
+{
+public:
+    HR_DMUS SetAllParameters(const DSFXI3DL2Reverb% pcDsFxI3DL2Reverb);
+	HR_DMUS SetQuality(Int32 lQuality);
+    HR_DMUS GetAllParameters([Out] DSFXI3DL2Reverb% pDsFxI3DL2Reverb);
+	HR_DMUS GetQuality([Out] Int32% plQuality);
+
+internal:
+	IDirectSoundFXI3DL2Reverb(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+
+//
+//
+//		Interfaces
+//
+//
+public ref class IReferenceClock : public ComWrapperBase<::IReferenceClock>
+{
+public:
+    HR_DMUS GetTime(Int64% pTime);
+	HR_DMUS AdviseTime(Int64 rtBaseTime, Int64 rtStreamTime, IntPtr hEvent, UInt32% pdwAdviseCookie);
+	HR_DMUS AdviseTime(Int64 rtBaseTime, Int64 rtStreamTime, WaitHandle^ hEvent, UInt32% pdwAdviseCookie) { return AdviseTime(rtBaseTime, rtStreamTime, hEvent->Handle, pdwAdviseCookie); }
+	HR_DMUS AdvisePeriodic(Int64 rtStartTime, Int64 rtPeriodTime, IntPtr hSemaphore, UInt32% pdwAdviseCookie);
+	HR_DMUS AdvisePeriodic(Int64 rtStartTime, Int64 rtPeriodTime, WaitHandle^ hSemaphore, UInt32% pdwAdviseCookie) { return AdvisePeriodic(rtStartTime, rtPeriodTime, hSemaphore->Handle, pdwAdviseCookie); }
+    HR_DMUS Unadvise(UInt32 dwAdviseCookie);
+
+internal:
+	IReferenceClock(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+public ref class IDirectMusicSegment : public ComWrapperBase<::IDirectMusicSegment>
+{
+internal:
+	IDirectMusicSegment(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+
+public:
+	//NOTE: this is not fully implemented, just contains items you can't get to from CSegment
+    HR_DMUS GetParam(Guid rguidType, UInt32 dwGroupBits, UInt32 dwIndex, Int32 mtTime, [Out] Int32% pmtNext, Object^% pParam);
+    HR_DMUS SetParam(Guid rguidType, UInt32 dwGroupBits, UInt32 dwIndex, Int32 mtTime, Object^ pParam);
+	HR_DMUS GetGraph([Out] IDirectMusicGraph^% ppGraph);
+	HR_DMUS SetGraph(IDirectMusicGraph^ ppGraph);
+};
+
+//
+//
+//		Opaque interfaces (eventually, could try to wrap them all)
+//
+//
+public ref class IDirectMusicPort : public ComWrapperBase<::IDirectMusicPort>
+{
+internal:
+	IDirectMusicPort(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+public ref class IDirectMusicPerformance : public ComWrapperBase<::IDirectMusicPerformance>
+{
+internal:
+	IDirectMusicPerformance(TBASE* ref, bool addRef) : ComWrapperBase(ref, addRef) {}
+};
+
+
+
+}	//namespace DirectMidi

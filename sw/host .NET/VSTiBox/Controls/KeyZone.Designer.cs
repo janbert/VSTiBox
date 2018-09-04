@@ -1,0 +1,243 @@
+﻿namespace VSTiBox.Controls
+{
+    partial class KeyZone
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.label6 = new System.Windows.Forms.Label();
+            this.nudTranspose = new System.Windows.Forms.NumericUpDown();
+            this.btnAddOctave = new System.Windows.Forms.Button();
+            this.btnSubtractOctave = new System.Windows.Forms.Button();
+            this.rbtnControlPedalEffect = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.rbtnControlPedalVolume = new System.Windows.Forms.RadioButton();
+            this.rbtnControlPedalNone = new System.Windows.Forms.RadioButton();
+            this.cbNoteDrop = new System.Windows.Forms.CheckBox();
+            this.pianoControl1 = new VSTiBox.Controls.Piano();
+            this.comboNoteDropDelay = new System.Windows.Forms.ComboBox();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.cbSustain = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTranspose)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
+            this.label6.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label6.Location = new System.Drawing.Point(26, 51);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Transpose";
+            // 
+            // nudTranspose
+            // 
+            this.nudTranspose.Location = new System.Drawing.Point(89, 49);
+            this.nudTranspose.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.nudTranspose.Name = "nudTranspose";
+            this.nudTranspose.Size = new System.Drawing.Size(55, 20);
+            this.nudTranspose.TabIndex = 8;
+            this.nudTranspose.ValueChanged += new System.EventHandler(this.nudTranspose_ValueChanged);
+            // 
+            // btnAddOctave
+            // 
+            this.btnAddOctave.Location = new System.Drawing.Point(151, 47);
+            this.btnAddOctave.Name = "btnAddOctave";
+            this.btnAddOctave.Size = new System.Drawing.Size(57, 24);
+            this.btnAddOctave.TabIndex = 9;
+            this.btnAddOctave.Text = "+ octave";
+            this.btnAddOctave.UseVisualStyleBackColor = true;
+            this.btnAddOctave.Click += new System.EventHandler(this.btnAddOctave_Click);
+            // 
+            // btnSubtractOctave
+            // 
+            this.btnSubtractOctave.Location = new System.Drawing.Point(214, 47);
+            this.btnSubtractOctave.Name = "btnSubtractOctave";
+            this.btnSubtractOctave.Size = new System.Drawing.Size(57, 24);
+            this.btnSubtractOctave.TabIndex = 10;
+            this.btnSubtractOctave.Text = "- octave";
+            this.btnSubtractOctave.UseVisualStyleBackColor = true;
+            this.btnSubtractOctave.Click += new System.EventHandler(this.btnSubtractOctave_Click);
+            // 
+            // rbtnControlPedalEffect
+            // 
+            this.rbtnControlPedalEffect.AutoSize = true;
+            this.rbtnControlPedalEffect.Checked = true;
+            this.rbtnControlPedalEffect.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.rbtnControlPedalEffect.Location = new System.Drawing.Point(352, 35);
+            this.rbtnControlPedalEffect.Name = "rbtnControlPedalEffect";
+            this.rbtnControlPedalEffect.Size = new System.Drawing.Size(88, 17);
+            this.rbtnControlPedalEffect.TabIndex = 12;
+            this.rbtnControlPedalEffect.TabStop = true;
+            this.rbtnControlPedalEffect.Text = "Effect control";
+            this.rbtnControlPedalEffect.UseVisualStyleBackColor = true;
+            this.rbtnControlPedalEffect.CheckedChanged += new System.EventHandler(this.rbtnControlPedalEffect_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
+            this.label2.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label2.Location = new System.Drawing.Point(349, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(126, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "MIDI control pedal action";
+            // 
+            // rbtnControlPedalVolume
+            // 
+            this.rbtnControlPedalVolume.AutoSize = true;
+            this.rbtnControlPedalVolume.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.rbtnControlPedalVolume.Location = new System.Drawing.Point(352, 55);
+            this.rbtnControlPedalVolume.Name = "rbtnControlPedalVolume";
+            this.rbtnControlPedalVolume.Size = new System.Drawing.Size(60, 17);
+            this.rbtnControlPedalVolume.TabIndex = 14;
+            this.rbtnControlPedalVolume.Text = "Volume";
+            this.rbtnControlPedalVolume.UseVisualStyleBackColor = true;
+            this.rbtnControlPedalVolume.CheckedChanged += new System.EventHandler(this.rbtnControlPedalVolume_CheckedChanged);
+            // 
+            // rbtnControlPedalNone
+            // 
+            this.rbtnControlPedalNone.AutoSize = true;
+            this.rbtnControlPedalNone.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.rbtnControlPedalNone.Location = new System.Drawing.Point(352, 75);
+            this.rbtnControlPedalNone.Name = "rbtnControlPedalNone";
+            this.rbtnControlPedalNone.Size = new System.Drawing.Size(51, 17);
+            this.rbtnControlPedalNone.TabIndex = 15;
+            this.rbtnControlPedalNone.Text = "None";
+            this.rbtnControlPedalNone.UseVisualStyleBackColor = true;
+            this.rbtnControlPedalNone.CheckedChanged += new System.EventHandler(this.rbtnControlPedalNone_CheckedChanged);
+            // 
+            // cbNoteDrop
+            // 
+            this.cbNoteDrop.AutoSize = true;
+            this.cbNoteDrop.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.cbNoteDrop.Location = new System.Drawing.Point(521, 35);
+            this.cbNoteDrop.Name = "cbNoteDrop";
+            this.cbNoteDrop.Size = new System.Drawing.Size(73, 17);
+            this.cbNoteDrop.TabIndex = 16;
+            this.cbNoteDrop.Text = "Note drop";
+            this.cbNoteDrop.UseVisualStyleBackColor = true;
+            this.cbNoteDrop.CheckedChanged += new System.EventHandler(this.cbNoteDrop_CheckedChanged);
+            // 
+            // pianoControl1
+            // 
+            this.pianoControl1.Location = new System.Drawing.Point(29, 109);
+            this.pianoControl1.Name = "pianoControl1";
+            this.pianoControl1.Size = new System.Drawing.Size(989, 87);
+            this.pianoControl1.TabIndex = 6;
+            this.pianoControl1.PianoKeyDown += new System.EventHandler<VSTiBox.Controls.PianoKeyEvent>(this.pianoControl1_PianoKeyDown);
+            this.pianoControl1.PianoKeyUp += new System.EventHandler<VSTiBox.Controls.PianoKeyEvent>(this.pianoControl1_PianoKeyUp);
+            // 
+            // comboNoteDropDelay
+            // 
+            this.comboNoteDropDelay.Enabled = false;
+            this.comboNoteDropDelay.FormattingEnabled = true;
+            this.comboNoteDropDelay.Items.AddRange(new object[] {
+            "1/8th",
+            "1/4th",
+            "1/2th",
+            "1",
+            "2",
+            "4"});
+            this.comboNoteDropDelay.Location = new System.Drawing.Point(600, 33);
+            this.comboNoteDropDelay.Name = "comboNoteDropDelay";
+            this.comboNoteDropDelay.Size = new System.Drawing.Size(55, 21);
+            this.comboNoteDropDelay.TabIndex = 17;
+            this.comboNoteDropDelay.SelectedIndexChanged += new System.EventHandler(this.comboNoteDropDelay_SelectedIndexChanged);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(943, 75);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 18;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // cbSustain
+            // 
+            this.cbSustain.AutoSize = true;
+            this.cbSustain.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.cbSustain.Location = new System.Drawing.Point(521, 58);
+            this.cbSustain.Name = "cbSustain";
+            this.cbSustain.Size = new System.Drawing.Size(61, 17);
+            this.cbSustain.TabIndex = 19;
+            this.cbSustain.Text = "Sustain";
+            this.cbSustain.UseVisualStyleBackColor = true;
+            this.cbSustain.CheckedChanged += new System.EventHandler(this.cbSustain_CheckedChanged);
+            // 
+            // KeyZone
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
+            this.Controls.Add(this.cbSustain);
+            this.Controls.Add(this.btnClear);
+            this.Controls.Add(this.comboNoteDropDelay);
+            this.Controls.Add(this.cbNoteDrop);
+            this.Controls.Add(this.rbtnControlPedalNone);
+            this.Controls.Add(this.rbtnControlPedalVolume);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.rbtnControlPedalEffect);
+            this.Controls.Add(this.btnSubtractOctave);
+            this.Controls.Add(this.btnAddOctave);
+            this.Controls.Add(this.nudTranspose);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.pianoControl1);
+            this.Name = "KeyZone";
+            this.Size = new System.Drawing.Size(1054, 564);
+            this.VisibleChanged += new System.EventHandler(this.KeyZoneControl_VisibleChanged);
+            ((System.ComponentModel.ISupportInitialize)(this.nudTranspose)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private Piano pianoControl1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown nudTranspose;
+        private System.Windows.Forms.Button btnAddOctave;
+        private System.Windows.Forms.Button btnSubtractOctave;
+        private System.Windows.Forms.RadioButton rbtnControlPedalEffect;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton rbtnControlPedalVolume;
+        private System.Windows.Forms.RadioButton rbtnControlPedalNone;
+        private System.Windows.Forms.CheckBox cbNoteDrop;
+        private System.Windows.Forms.ComboBox comboNoteDropDelay;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.CheckBox cbSustain;
+    }
+}
