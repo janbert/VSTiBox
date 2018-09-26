@@ -466,7 +466,7 @@
             this.lblTempCase.AutoSize = true;
             this.lblTempCase.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTempCase.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTempCase.Location = new System.Drawing.Point(1239, 655);
+            this.lblTempCase.Location = new System.Drawing.Point(1239, 677);
             this.lblTempCase.Name = "lblTempCase";
             this.lblTempCase.Size = new System.Drawing.Size(37, 15);
             this.lblTempCase.TabIndex = 21;
@@ -477,7 +477,7 @@
             this.lblTempCPU.AutoSize = true;
             this.lblTempCPU.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTempCPU.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTempCPU.Location = new System.Drawing.Point(1239, 639);
+            this.lblTempCPU.Location = new System.Drawing.Point(1239, 661);
             this.lblTempCPU.Name = "lblTempCPU";
             this.lblTempCPU.Size = new System.Drawing.Size(37, 15);
             this.lblTempCPU.TabIndex = 22;
@@ -493,7 +493,7 @@
             this.lblUsageCPU.AutoSize = true;
             this.lblUsageCPU.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsageCPU.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblUsageCPU.Location = new System.Drawing.Point(1239, 608);
+            this.lblUsageCPU.Location = new System.Drawing.Point(1239, 630);
             this.lblUsageCPU.Name = "lblUsageCPU";
             this.lblUsageCPU.Size = new System.Drawing.Size(26, 15);
             this.lblUsageCPU.TabIndex = 24;
@@ -504,7 +504,7 @@
             this.lblUsageMemory.AutoSize = true;
             this.lblUsageMemory.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsageMemory.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblUsageMemory.Location = new System.Drawing.Point(1239, 623);
+            this.lblUsageMemory.Location = new System.Drawing.Point(1239, 645);
             this.lblUsageMemory.Name = "lblUsageMemory";
             this.lblUsageMemory.Size = new System.Drawing.Size(43, 15);
             this.lblUsageMemory.TabIndex = 26;
@@ -678,7 +678,7 @@
             // pbMasterFxInsert
             // 
             this.pbMasterFxInsert.Image = global::VSTiBox.Properties.Resources.insert_on;
-            this.pbMasterFxInsert.Location = new System.Drawing.Point(1248, 526);
+            this.pbMasterFxInsert.Location = new System.Drawing.Point(1245, 554);
             this.pbMasterFxInsert.Name = "pbMasterFxInsert";
             this.pbMasterFxInsert.Size = new System.Drawing.Size(32, 32);
             this.pbMasterFxInsert.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -711,7 +711,7 @@
             // pictureBoxCPU
             // 
             this.pictureBoxCPU.Image = global::VSTiBox.Properties.Resources.cpu;
-            this.pictureBoxCPU.Location = new System.Drawing.Point(1220, 613);
+            this.pictureBoxCPU.Location = new System.Drawing.Point(1220, 635);
             this.pictureBoxCPU.Name = "pictureBoxCPU";
             this.pictureBoxCPU.Size = new System.Drawing.Size(16, 16);
             this.pictureBoxCPU.TabIndex = 25;
@@ -720,7 +720,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::VSTiBox.Properties.Resources.thermometer;
-            this.pictureBox1.Location = new System.Drawing.Point(1216, 641);
+            this.pictureBox1.Location = new System.Drawing.Point(1216, 663);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.TabIndex = 23;
@@ -740,7 +740,7 @@
             this.knobMasterPan.ForeColor = System.Drawing.Color.White;
             this.knobMasterPan.KnobBorderStyle = VSTiBox.KnobStyle.FlatBorder;
             this.knobMasterPan.KnobColor = System.Drawing.Color.White;
-            this.knobMasterPan.Location = new System.Drawing.Point(1236, 563);
+            this.knobMasterPan.Location = new System.Drawing.Point(1236, 588);
             this.knobMasterPan.MarkerColor = System.Drawing.Color.White;
             this.knobMasterPan.Minimum = -100;
             this.knobMasterPan.Name = "knobMasterPan";
@@ -753,7 +753,7 @@
             // 
             this.vuLeft.Location = new System.Drawing.Point(1250, 4);
             this.vuLeft.Name = "vuLeft";
-            this.vuLeft.Size = new System.Drawing.Size(11, 516);
+            this.vuLeft.Size = new System.Drawing.Size(15, 543);
             this.vuLeft.TabIndex = 16;
             this.vuLeft.Text = "vuLeft";
             this.vuLeft.Value = 0F;
@@ -762,7 +762,7 @@
             // 
             this.vuRight.Location = new System.Drawing.Point(1265, 4);
             this.vuRight.Name = "vuRight";
-            this.vuRight.Size = new System.Drawing.Size(11, 516);
+            this.vuRight.Size = new System.Drawing.Size(12, 543);
             this.vuRight.TabIndex = 15;
             this.vuRight.Text = "vuRight";
             this.vuRight.Value = 0F;

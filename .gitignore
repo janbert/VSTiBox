@@ -30,3 +30,37 @@
 *.exe
 *.out
 *.app
+
+*.log
+
+*.tlog
+
+*.lastbuildstate
+
+sw/host \.NET/BlueWave\.Interop\.Asio/Release/
+
+sw/host \.NET/DirectMidi\.Interop/Release/
+
+sw/host \.NET/Kernel32Midi/bin/Release/
+
+sw/host \.NET/Kernel32Midi/obj/Release/
+
+sw/host \.NET/OpenHardwareMonitor/obj/Release/
+
+sw/host \.NET/packages/
+
+sw/host \.NET/PDFView/bin/Release/
+
+sw/host \.NET/PDFView/obj/Release/
+
+sw/host \.NET/Release/
+
+*.opensdf
+
+*.sdf
+
+*.suo
+
+sw/host \.NET/VSTiBox/bin/Release/
+
+sw/host \.NET/VSTiBox/obj/Release/
