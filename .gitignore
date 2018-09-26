@@ -64,3 +64,5 @@ sw/host \.NET/Release/
 sw/host \.NET/VSTiBox/bin/Release/
 
 sw/host \.NET/VSTiBox/obj/Release/
+
+sw/control/Flash/
