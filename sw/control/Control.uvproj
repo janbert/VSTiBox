@@ -10,6 +10,7 @@
       <TargetName>Simulator</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>LPC1114/302</Device>
@@ -373,7 +374,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>.\driver;.\config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1354,7 +1355,7 @@
               <MiscControls></MiscControls>
               <Define>__DEBUG__ __MASTER__</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;.\lib\CMSISv2p00_LPC11xx\inc;.\src;..\Thermostat;.\driver;.\.</IncludePath>
+              <IncludePath>.\config;.\lib\CMSISv2p00_LPC11xx\inc;.\src;.\driver;.\.</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
