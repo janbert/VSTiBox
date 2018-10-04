@@ -33,3 +33,31 @@
 
 *.log
 sw/control/Flash/
+
+sw/host \.NET/BlueWave\.Interop\.Asio/Release/
+
+sw/host \.NET/DirectMidi\.Interop/Release/
+
+sw/host \.NET/Kernel32Midi/bin/
+
+sw/host \.NET/Kernel32Midi/obj/
+
+sw/host \.NET/OpenHardwareMonitor/obj/
+
+sw/host \.NET/packages/
+
+sw/host \.NET/PDFView/bin/
+
+sw/host \.NET/PDFView/obj/
+
+sw/host \.NET/VSTiBox/bin/
+
+sw/host \.NET/VSTiBox/obj/
+
+sw/host \.NET/VSTiBox\.sdf
+
+sw/host \.NET/Release/
+
+sw/host \.NET/VSTiBox\.suo
+
+sw/host \.NET/VSTiBox\.v11\.suo
