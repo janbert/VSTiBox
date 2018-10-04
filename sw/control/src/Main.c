@@ -4,7 +4,7 @@
 
 #include "application.h"
 
-//#define JTAG	// Select either JTAG/SWD or LED PWM functionality! They share the same pin.
+//#define SWD	// Select either SWD or LED PWM functionality! They share the same pin.
  
 // Board options
 #define ENC0
@@ -147,8 +147,8 @@ int main (void)                                	/* Main Program               */
 	Msg_t fwdMsg;							// Message forward : not intended for this slave 
 	Msg_t newMsg;							// Message created by the slave (e.g. button press / release / analog changed)
 	
-	// Huge delay for JTAG/SWD to take over before being set to GPIO (shared pin)! Without this delay debugging is 
-    // not possible anymore when deselecting JTAG/SWD functionality. In this case only the on-chip bootloader can be used
+	// Huge delay for SWD/SWD to take over before being set to GPIO (shared pin)! Without this delay debugging is 
+    // not possible anymore when deselecting SWD/SWD functionality. In this case only the on-chip bootloader can be used
 	int n;
 	for(n=0;n<2000000;n++)	// 3 sec
 	{
@@ -660,7 +660,7 @@ void LedPWM(uint8_t led, float pwm)
 
 void LedsInit(void)
 {
-#ifndef JTAG	
+#ifndef SWD	
 	LPC_IOCON->SWCLK_PIO0_10 = FUNC3;				// LEDR1 0	// P0.10	T16B0_MAT2	 	+ SWCLK
 #endif	
 	LPC_IOCON->PIO0_1 =	FUNC2;						// LEDR2 1	// P0.1		T32B0_MAT2		+ ISP
@@ -676,7 +676,7 @@ void LedsInit(void)
 	LPC_IOCON->PIO1_10 = FUNC2;						// LEDG4 7	// P1.10	T16B1_MAT1
 	LPC_IOCON->R_PIO1_1 = FUNC3|DIGITAL_MODE;		// LEDB1 8	// P1.1 	T32B1_MAT0
 	LPC_IOCON->PIO1_9 = FUNC1; 						// LEDB2 9	// P1.9		T16B1_MAT0
-#ifndef JTAG
+#ifndef SWD
 	LPC_IOCON->SWDIO_PIO1_3 = FUNC3|DIGITAL_MODE;	// LEDB3 10	// p1.3		T32B1_MAT2		+ SWDIO
 #endif	
 	LPC_IOCON->PIO0_9 = FUNC2;						// LEDB4 11	// P0.9		T16B0_MAT1
