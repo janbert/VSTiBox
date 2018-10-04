@@ -29,8 +29,11 @@ namespace VSTiBox
         byte[] mAsioRightInt32LSBBuff;
 #else
         private AsioDriver mAsio;
-        Channel mOutputLeft;
-        Channel mOutputRight;
+        Channel mAsioOutputLeft;    // Audio output to ASIO driver (Currently only 1x stereo)
+        Channel mAsioOutputRight;
+        AudioBufferInfo mAsioInputBuffers;
+        Channel mAsioInputLeft;
+        Channel mAsioInputRight;
 
 #endif
         private bool mIsAsioRunning = false;
@@ -62,8 +65,6 @@ namespace VSTiBox
         private int mMaxCpuLoad = 0;
         private MidiDevice mMidiDevice;
         private MidiMessage[] mMidiInMessages = new MidiMessage[512];
-
-
 
         /// <summary>
         /// Constructor
@@ -238,7 +239,7 @@ namespace VSTiBox
         [DllImport("avrt.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool AvRevertMmThreadCharacteristics(IntPtr avrtHandle);
 
-#if  NAUDIO_ASIO
+#if NAUDIO_ASIO
 #else
         [STAThread]
 #endif
@@ -269,13 +270,13 @@ namespace VSTiBox
             if (mAsio != null)
             {
 #if NAUDIO_ASIO
-                    if (mAsio != null)
-                    {
-                        mWaveProvider = new NAudio.Wave.BufferedWaveProvider(new NAudio.Wave.WaveFormat(44100, 16, 2));
-                        mAsio.InitRecordAndPlayback(mWaveProvider, 2, 44100);
-                        mAsio.AudioAvailable += mAsio_AudioAvailable;
-                        mAsioBuffSize = mSettingsMgr.Settings.AsioBufferSize;
-                    }
+                if (mAsio != null)
+                {
+                    mWaveProvider = new NAudio.Wave.BufferedWaveProvider(new NAudio.Wave.WaveFormat(44100, 16, 2));
+                    mAsio.InitRecordAndPlayback(mWaveProvider, 2, 44100);
+                    mAsio.AudioAvailable += mAsio_AudioAvailable;
+                    mAsioBuffSize = mSettingsMgr.Settings.AsioBufferSize;
+                }
 #else
                 int p = mAsio.BufferSizex.PreferredSize;
                 int max = mAsio.BufferSizex.MaxSize;
@@ -298,8 +299,12 @@ namespace VSTiBox
                 mAsio.CreateBuffers(mAsioBuffSize);
                 // this is our buffer fill event we need to respond to
                 mAsio.BufferUpdate += new EventHandler(asio_BufferUpdateHandler);
-                mOutputLeft = mAsio.OutputChannels[0];
-                mOutputRight = mAsio.OutputChannels[1];
+                mAsioOutputLeft = mAsio.OutputChannels[0];      // Use only 1x stereo out
+                mAsioOutputRight = mAsio.OutputChannels[1];
+
+                mAsioInputBuffers = new AudioBufferInfo(2, mAsioBuffSize);
+                mAsioInputLeft = mAsio.InputChannels[0];        // Use only 1x stereo in
+                mAsioInputRight = mAsio.InputChannels[1];                
 #endif
                 // todo: test
                 //mMixLeft = new float[mAsioBuffSize];
@@ -307,7 +312,7 @@ namespace VSTiBox
 
                 // and off we go
 
-                stopWatchTicksForOneAsioBuffer = Stopwatch.Frequency / (44100 / mAsioBuffSize);
+                stopWatchTicksForOneAsioBuffer = (long)(Stopwatch.Frequency / (mAsio.SampleRate / mAsioBuffSize));
 #if NAUDIO_ASIO
                     mAsioLeftInt32LSBBuff = new byte[mAsioBuffSize * 4];
                     mAsioRightInt32LSBBuff = new byte[mAsioBuffSize * 4];
@@ -592,11 +597,11 @@ namespace VSTiBox
                 mFirstAsioBufferUpdateHandlerCall = false;
             }
 
-            // Clear buffer
+            // Clear output buffer
             for (int index = 0; index < mAsioBuffSize; index++)
             {
-                mOutputLeft[index] = 0.0f;
-                mOutputRight[index] = 0.0f;
+                mAsioOutputLeft[index] = 0.0f;
+                mAsioOutputRight[index] = 0.0f;
             }
 
             // Dequeue all midi in messages            
@@ -612,11 +617,24 @@ namespace VSTiBox
             midiInCount = mMidiDevice.DequeueMidiInMessages(mMidiInMessages, 0, midiInCount);
 
             for (int i = 0; i < NrOfPluginChannels; i++)
-            {
+            {               
                 bool midiPanic = mMidiPanic[i];
                 mMidiPanic[i] = false;
 
                 VstPluginChannel channel = PluginChannels[i];
+
+                // Copy Asio input to channel input
+                // todo: [JBK] point the VstChannel input buffer directly tot the input buffer from the asio driver to prevent all the copying. 
+                // For now just try this if it works
+                if (channel.InputBuffers.Count > 0)
+                {
+                    for (int n = 0; n < mAsioBuffSize; ++n)
+                    {
+                        channel.InputBuffers.Raw[0][n] = mAsioInputLeft[n];
+                        channel.InputBuffers.Raw[1][n] = mAsioInputRight[n];
+                    }
+                }
+
                 if (channel.InstrumentPlugin.State == PluginState.Empty)
                 {
                     continue;
@@ -691,14 +709,14 @@ namespace VSTiBox
                     if (swappedBuffers)
                     {
                         // todo: Pan 
-                        mOutputLeft[index] += channel.InputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
-                        mOutputRight[index] += channel.InputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputLeft[index] += channel.InputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputRight[index] += channel.InputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
                     }
                     else
                     {
                         // todo: Pan 
-                        mOutputLeft[index] += channel.OutputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
-                        mOutputRight[index] += channel.OutputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputLeft[index] += channel.OutputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputRight[index] += channel.OutputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
                     }
                 }
             }
@@ -712,24 +730,24 @@ namespace VSTiBox
             for (int index = 0; index < mAsioBuffSize; index++)
             {
                 // Master pan
-                mOutputLeft[index] *= mPanLeft;
-                mOutputRight[index] *= mPanRight;
+                mAsioOutputLeft[index] *= mPanLeft;
+                mAsioOutputRight[index] *= mPanRight;
 
                 // Get max volume levels
-                if (mOutputLeft[index] > mMaxVolLeft) mMaxVolLeft = mOutputLeft[index];
-                if (mOutputRight[index] > mMaxVolRight) mMaxVolRight = mOutputRight[index];
+                if (mAsioOutputLeft[index] > mMaxVolLeft) mMaxVolLeft = mAsioOutputLeft[index];
+                if (mAsioOutputRight[index] > mMaxVolRight) mMaxVolRight = mAsioOutputRight[index];
             }
             mVUMeters[0].Value = mMaxVolLeft;
             mVUMeters[1].Value = mMaxVolRight;
 
-            // todo: [JBK] put back
-            //lock (mMP3RecorderLockObj)
-            //{
-            //    if (mMp3Recorder != null)
-            //    {
-            //        mMp3Recorder.WriteSamples(mMixLeft, mMixRight, mAsioBuffSize);
-            //    }
-            //}      
+            
+            lock (mMP3RecorderLockObj)
+            {
+                if (mMp3Recorder != null)
+                {
+                    mMp3Recorder.WriteSamples(mAsioOutputLeft, mAsioOutputRight, mAsioBuffSize);
+                }
+            }      
 
 #if NAUDIO_ASIO
             // Copy mix            
@@ -956,7 +974,7 @@ namespace VSTiBox
                 // actually open the plugin itself
                 pluginContext.PluginCommandStub.Open();
                 pluginContext.PluginCommandStub.SetBlockSize(mAsioBuffSize);
-                pluginContext.PluginCommandStub.SetSampleRate(44100f);
+                pluginContext.PluginCommandStub.SetSampleRate((float)mAsio.SampleRate);
 
                 // wrap these in using statements to automatically call Dispose and cleanup the unmanaged memory.
                 pluginContext.PluginCommandStub.MainsChanged(true);
