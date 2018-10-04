@@ -53,7 +53,7 @@ namespace VSTiBox.Common
         private ManualResetEventSlim mUnloadingCompleteEvent = new ManualResetEventSlim(false);
         private Boolean mEditorIsOpen = false;
 
-        public event EventHandler<PluginStateChangeEventArgs> StateChanged;
+        public event EventHandler<PluginStateChangeEventArgs> StateChanged;        
         public event EventHandler OnEditorOpening;
         public event EventHandler OnEditorOpened;
         public event EventHandler OnEditorClosed;
@@ -164,8 +164,8 @@ namespace VSTiBox.Common
                     }
                 }
 
-                PluginName = name; // value.PluginCommandStub.GetEffectName(); //todo: [JBK] Bug on channel control plugin current sound name. Related to this line
-                ProgramName = ctx.PluginCommandStub.GetProgramName();
+                PluginName = name;                 
+                ProgramName = ctx.PluginCommandStub.GetProgramName(); 
                 UseExtendedEffectRange = (PluginName == "Nexus");
                 State = PluginState.Deactivated;
             }
@@ -285,12 +285,15 @@ namespace VSTiBox.Common
         {
             if ((mVstPluginContext.PluginInfo.Flags & VstPluginFlags.ProgramChunks) == VstPluginFlags.ProgramChunks)
             {
+                ProgramName = mVstPluginContext.PluginCommandStub.GetProgramName();
                 return mVstPluginContext.PluginCommandStub.GetChunk(false);
             }
             else
             {
+                ProgramName = mVstPluginContext.PluginCommandStub.GetProgramName();
                 return GetParameterData();
             }
+            
         }
 
         private void SetData(byte[] data)
@@ -303,6 +306,7 @@ namespace VSTiBox.Common
             {
                 SetParameters(data);
             }
+            ProgramName = mVstPluginContext.PluginCommandStub.GetProgramName();
         }
 
         private void SetParameters(byte[] data)

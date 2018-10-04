@@ -44,7 +44,7 @@ namespace VSTiBox
                 if(value != null)
                 {
                     mVstPluginChannel = value;
-                    mVstPluginChannel.PresetImported += mVstPluginChannel_PresetLoaded;
+                    mVstPluginChannel.PresetImported += mVstPluginChannel_PresetImported;
                     foreach (VstPlugin plugin in mVstPluginChannel.AllPlugins)
                     {
                         plugin.StateChanged += Plugin_StateChanged;
@@ -273,7 +273,7 @@ namespace VSTiBox
             }
         }
                 
-        void mVstPluginChannel_PresetLoaded(object sender, ChannelPresetImportEventArgs e)
+        void mVstPluginChannel_PresetImported(object sender, ChannelPresetImportEventArgs e)
         {
             mIgnoreEvents = true;
 
