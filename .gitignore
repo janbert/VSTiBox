@@ -61,3 +61,5 @@ sw/host \.NET/Release/
 sw/host \.NET/VSTiBox\.suo
 
 sw/host \.NET/VSTiBox\.v11\.suo
+
+sw/host \.NET/BlueWave\.Interop\.Asio/Debug/

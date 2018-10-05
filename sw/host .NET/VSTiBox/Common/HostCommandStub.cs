@@ -9,40 +9,21 @@ namespace VSTiBox
     /// <summary>
     /// The HostCommandStub class represents the part of the host that a plugin can call.
     /// </summary>
-    class HostCommandStub : IVstHostCommandStub 
-    {
-        private int mBPM = 120;
-      
-        private VstTimeInfo mVstTimeInfo;
+    public abstract class VstHostCommandBase : IVstHostCommandStub 
+    {     
+        public VstTimeInfo VstTimeInfo { get; private set; }
 
-        /// <summary>
-        /// Raised when one of the methods is called.
-        /// </summary>
-        public event EventHandler<PluginCalledEventArgs> PluginCalled;
+        public virtual int BPM { get; set; }
+
+        public VstHostCommandBase()
+        {
+            VstTimeInfo = new VstTimeInfo();
+            BPM = 120;
+        }
 
         private void RaisePluginCalled(string message)
         {
-            EventHandler<PluginCalledEventArgs> handler = PluginCalled;
 
-            if(handler != null)
-            {
-                handler(this, new PluginCalledEventArgs(message));
-            }
-        }
-
-        public HostCommandStub(VstTimeInfo timeInfo, Bank bank)
-        {
-            mVstTimeInfo = timeInfo;
-            if (bank != null)
-            {
-                mBPM = bank.BPM;
-                bank.BPMChanged += bank_BPMChanged;
-            }
-        }
-
-        void bank_BPMChanged(int bpm)
-        {
-            mBPM = bpm;
         }
 
         #region IVstHostCommandsStub Members
@@ -68,6 +49,8 @@ namespace VSTiBox
             {
                 case("sendVstTimeInfo"):
                     return Jacobi.Vst.Core.VstCanDoResult.Yes;
+                case ("sizeWindow"):
+                    return Jacobi.Vst.Core.VstCanDoResult.No;
             }
             
             RaisePluginCalled("CanDo(" + cando + ")");
@@ -154,22 +137,22 @@ namespace VSTiBox
         /// <inheritdoc />
         public Jacobi.Vst.Core.VstTimeInfo GetTimeInfo(Jacobi.Vst.Core.VstTimeInfoFlags filterFlags)
         {
-            mVstTimeInfo.SampleRate = 44100.0;
-            mVstTimeInfo.Tempo = (double)mBPM; 
-            mVstTimeInfo.PpqPosition = (mVstTimeInfo.SamplePosition / mVstTimeInfo.SampleRate) * (mVstTimeInfo.Tempo / 60.0);
-            mVstTimeInfo.NanoSeconds = 0.0;
-            mVstTimeInfo.BarStartPosition = 0.0;
-            mVstTimeInfo.CycleStartPosition = 0.0;
-            mVstTimeInfo.CycleEndPosition = 0.0;
-            mVstTimeInfo.TimeSignatureNumerator = 4;
-            mVstTimeInfo.TimeSignatureDenominator = 4;
-            mVstTimeInfo.SmpteOffset = 0;
-            mVstTimeInfo.SmpteFrameRate = new Jacobi.Vst.Core.VstSmpteFrameRate();
-            mVstTimeInfo.SamplesToNearestClock = 0;
-            mVstTimeInfo.Flags = VstTimeInfoFlags.TempoValid |
+            VstTimeInfo.SampleRate = 44100.0;
+            VstTimeInfo.Tempo = (double)BPM; 
+            VstTimeInfo.PpqPosition = (VstTimeInfo.SamplePosition / VstTimeInfo.SampleRate) * (VstTimeInfo.Tempo / 60.0);
+            VstTimeInfo.NanoSeconds = 0.0;
+            VstTimeInfo.BarStartPosition = 0.0;
+            VstTimeInfo.CycleStartPosition = 0.0;
+            VstTimeInfo.CycleEndPosition = 0.0;
+            VstTimeInfo.TimeSignatureNumerator = 4;
+            VstTimeInfo.TimeSignatureDenominator = 4;
+            VstTimeInfo.SmpteOffset = 0;
+            VstTimeInfo.SmpteFrameRate = new Jacobi.Vst.Core.VstSmpteFrameRate();
+            VstTimeInfo.SamplesToNearestClock = 0;
+            VstTimeInfo.Flags = VstTimeInfoFlags.TempoValid |
                                 VstTimeInfoFlags.PpqPositionValid | 
                                 VstTimeInfoFlags.TransportPlaying;
-            return mVstTimeInfo;            
+            return VstTimeInfo;            
         }
 
         /// <inheritdoc />
@@ -257,7 +240,7 @@ namespace VSTiBox
     /// <summary>
     /// Event arguments used when one of the mehtods is called.
     /// </summary>
-    class PluginCalledEventArgs : EventArgs
+    public class PluginCalledEventArgs : EventArgs
     {
         /// <summary>
         /// Constructs a new instance with a <paramref name="message"/>.

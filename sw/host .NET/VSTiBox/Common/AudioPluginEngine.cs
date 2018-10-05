@@ -18,7 +18,7 @@ using VSTiBox.Common;
 
 namespace VSTiBox
 {
-    public unsafe class AudioPluginEngine
+    public unsafe class AudioPluginEngine : VstHostCommandBase
     {
         const int NrOfPluginChannels = 8;
 
@@ -52,13 +52,8 @@ namespace VSTiBox
         private float mMaxVolLeft = 0.0f;
         private float mMaxVolRight = 0.0f;
         private Panel mHostScrollPanel;
-
-        public VstPluginChannel[] PluginChannels { get; private set; }
-        public VstPluginChannel MasterEffectPluginChannel { get; private set; }
-
         private SettingsManager mSettingsMgr;
         private VuMeter[] mVUMeters;
-        private VstTimeInfo mVstTimeInfo = new VstTimeInfo();
         private float mPanLeft = 1.0f;
         private float mPanRight = 1.0f;
         private Stopwatch mCpuLoadStopWatch = new Stopwatch();
@@ -66,6 +61,9 @@ namespace VSTiBox
         private MidiDevice mMidiDevice;
         private MidiMessage[] mMidiInMessages = new MidiMessage[512];
 
+        public VstPluginChannel[] PluginChannels { get; private set; }
+        public VstPluginChannel MasterEffectPluginChannel { get; private set; }
+    
         /// <summary>
         /// Constructor
         /// </summary>
@@ -131,6 +129,23 @@ namespace VSTiBox
             mMidiPanicEvents[0] = midiPanicEvent;
 
             mMidiDevice = new MidiDevice();
+        }
+
+       
+        public override int BPM
+        {
+            get
+            {
+                return base.BPM;
+            }
+            set
+            {
+                base.BPM = value;
+                if (mActiveBank != null)
+                {
+                    mActiveBank.BPM = value;
+                }                
+            }
         }
 
         public float MasterPan
@@ -769,7 +784,7 @@ namespace VSTiBox
             e.WrittenToOutputBuffers = true;
 #else
             // Start buffer calculations for next asio call.
-            mVstTimeInfo.SamplePosition++;
+            VstTimeInfo.SamplePosition++;
 #endif
             int cpuLoad = 0;
             long elapsedTicksDuringHandler = mCpuLoadStopWatch.ElapsedTicks;
@@ -793,9 +808,9 @@ namespace VSTiBox
         }
 #endif
 
-        private void hostCmdStub_PluginCalled(object sender, PluginCalledEventArgs e)
+        /*private void hostCmdStub_PluginCalled(object sender, PluginCalledEventArgs e)
         {
-            HostCommandStub hostCmdStub = (HostCommandStub)sender;
+            VstHostCommandBase hostCmdStub = (VstHostCommandBase)sender;
 
             // can be null when called from inside the plugin main entry point.
             if (hostCmdStub.PluginContext.PluginInfo != null)
@@ -806,37 +821,38 @@ namespace VSTiBox
             {
                 Debug.WriteLine("The loading Plugin called:" + e.Message);
             }
-        }
+        }*/
 
 
         private Dictionary<VstPluginContext, string> mRecycledPluginContextDictionary = new Dictionary<VstPluginContext, string>();
 
-        private Bank mBank;
-        public Bank Bank
+        private Bank mActiveBank = null;
+        public Bank ActiveBank
         {
             get
             {
-                return mBank;
+                return mActiveBank;
             }
         }
 
         public void LoadBank(Bank bank)
         {
-            mBank = bank;
+            mActiveBank = bank;
             bool firstEditorLoaded = false;
 
             // Make a list of required plugins that can be re-used from currently active plugins. Unload all others
             List<string> requiredPlugins = new List<string>();
 
-            if (mBank != null)
-            {
+            if (bank != null)
+            {                
+                BPM = bank.BPM;
                 for (int i = 0; i < 8; i++)
                 {
-                    if (mBank.Presets[i].InstrumentVstPreset.State != PluginState.Empty)
+                    if (bank.Presets[i].InstrumentVstPreset.State != PluginState.Empty)
                     {
-                        requiredPlugins.Add(mBank.Presets[i].InstrumentVstPreset.Name);
+                        requiredPlugins.Add(bank.Presets[i].InstrumentVstPreset.Name);
                     }
-                    var res = mBank.Presets[i].EffectVstPresets.Where(n => n.State != PluginState.Empty).Select(x => x.Name);
+                    var res = bank.Presets[i].EffectVstPresets.Where(n => n.State != PluginState.Empty).Select(x => x.Name);
                     if (res.Count() > 0)
                     {
                         requiredPlugins.AddRange(res.ToArray());
@@ -875,9 +891,9 @@ namespace VSTiBox
             // Now load new plugins
             for (int i = 0; i < 8; i++)
             {
-                if (mBank != null)
+                if (bank != null)
                 {
-                    ChannelPreset preset = mBank.Presets[i];
+                    ChannelPreset preset = bank.Presets[i];
 
                     LoadChannelPreset(PluginChannels[i], preset);
 
@@ -963,19 +979,21 @@ namespace VSTiBox
 
             try
             {
-                HostCommandStub hostCmdStub = new HostCommandStub(mVstTimeInfo, mBank);
-                hostCmdStub.PluginCalled += new EventHandler<PluginCalledEventArgs>(hostCmdStub_PluginCalled);
-                pluginContext = VstPluginContext.Create(pluginPath, hostCmdStub);
-
+                //VstHostCommandBase hostCmdStub = new VstHostCommandBase(this);
+                //hostCmdStub.PluginCalled += hostCmdStub_PluginCalled;
+                pluginContext = VstPluginContext.Create(pluginPath, this);
+                
                 // add custom data to the context
                 pluginContext.Set("PluginPath", pluginName);
-                pluginContext.Set("HostCmdStub", hostCmdStub);
+                pluginContext.Set("HostCmdStub", this);
 
                 // actually open the plugin itself
                 pluginContext.PluginCommandStub.Open();
                 pluginContext.PluginCommandStub.SetBlockSize(mAsioBuffSize);
-                pluginContext.PluginCommandStub.SetSampleRate((float)mAsio.SampleRate);
-
+                if (mAsio != null)
+                {
+                    pluginContext.PluginCommandStub.SetSampleRate((float)mAsio.SampleRate);
+                }
                 // wrap these in using statements to automatically call Dispose and cleanup the unmanaged memory.
                 pluginContext.PluginCommandStub.MainsChanged(true);
                 pluginContext.PluginCommandStub.StartProcess();
@@ -991,12 +1009,12 @@ namespace VSTiBox
         {
             for (int i = 0; i < 8; i++)
             {
-                mBank.Presets[i] = PluginChannels[i].ExportChannelPreset();
+                mActiveBank.Presets[i] = PluginChannels[i].ExportChannelPreset();
 
-                ChannelPreset preset = mBank.Presets[i];
+                ChannelPreset preset = mActiveBank.Presets[i];
 
             }
-            mSettingsMgr.SaveBank(mBank);
+            mSettingsMgr.SaveBank(mActiveBank);
         }
 
 
@@ -1036,12 +1054,12 @@ namespace VSTiBox
 
                     try
                     {
-                        HostCommandStub tmpHostCmdStub = new HostCommandStub(mVstTimeInfo, null);
-                        using (VstPluginContext ctx = VstPluginContext.Create(file.FullName, tmpHostCmdStub))
+                        //VstHostCommandBase tmpHostCmdStub = new VstHostCommandBase(this);
+                        using (VstPluginContext ctx = VstPluginContext.Create(file.FullName, this))
                         {
                             // add custom data to the context
                             ctx.Set("PluginPath", file.FullName);
-                            ctx.Set("HostCmdStub", tmpHostCmdStub);
+                            ctx.Set("HostCmdStub", this);
 
                             VstInfo info = new VstInfo();
 

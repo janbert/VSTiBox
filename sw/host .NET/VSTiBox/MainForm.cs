@@ -599,10 +599,10 @@ namespace VSTiBox
             PopupForm popup = new PopupForm("Saving bank", -1);
             popup.Show();
             Application.DoEvents();
-            mAudioPluginEngine.Bank.MultiTrackFileName = mMultitrackPlayer.FileName;
-            mAudioPluginEngine.Bank.MultiTrackVolume = mMultitrackPlayer.Volume;
-            mAudioPluginEngine.Bank.ClickTrackFileName = mClickTrackPlayer.FileName;
-            mAudioPluginEngine.Bank.ClickTrackVolume = mClickTrackPlayer.Volume;
+            mAudioPluginEngine.ActiveBank.MultiTrackFileName = mMultitrackPlayer.FileName;
+            mAudioPluginEngine.ActiveBank.MultiTrackVolume = mMultitrackPlayer.Volume;
+            mAudioPluginEngine.ActiveBank.ClickTrackFileName = mClickTrackPlayer.FileName;
+            mAudioPluginEngine.ActiveBank.ClickTrackVolume = mClickTrackPlayer.Volume;
             mAudioPluginEngine.SaveBank();
             popup.Close();
         }
@@ -658,7 +658,7 @@ namespace VSTiBox
             {
                 try
                 {
-                    mAudioPluginEngine.Bank.PDFFileName = ofd.FileName;
+                    mAudioPluginEngine.ActiveBank.PDFFileName = ofd.FileName;
                     saveBank_Click(string.Empty);
                 }
                 catch (Exception ex)
@@ -710,11 +710,11 @@ namespace VSTiBox
 
         private void menuViewPDF_Click(string name)
         {
-            if (!string.IsNullOrEmpty(mAudioPluginEngine.Bank.PDFFileName))
+            if (!string.IsNullOrEmpty(mAudioPluginEngine.ActiveBank.PDFFileName))
             {
-                if (File.Exists(mAudioPluginEngine.Bank.PDFFileName))
+                if (File.Exists(mAudioPluginEngine.ActiveBank.PDFFileName))
                 {
-                    PDFViewForm form = new PDFViewForm(mAudioPluginEngine.Bank.PDFFileName);
+                    PDFViewForm form = new PDFViewForm(mAudioPluginEngine.ActiveBank.PDFFileName);
                     form.Show();
                 }
             }
@@ -1033,16 +1033,16 @@ namespace VSTiBox
 
         private void pbBPMUp_Click(object sender, EventArgs e)
         {
-            mAudioPluginEngine.Bank.BPM++;
-            mMetronomeTimer.BPM = mAudioPluginEngine.Bank.BPM;
-            lblBPM.Text = mAudioPluginEngine.Bank.BPM.ToString();
+            mAudioPluginEngine.BPM++;
+            mMetronomeTimer.BPM = mAudioPluginEngine.BPM;
+            lblBPM.Text = mAudioPluginEngine.BPM.ToString();
         }
 
         private void pbBPMDown_Click(object sender, EventArgs e)
         {
-            mAudioPluginEngine.Bank.BPM--;
-            mMetronomeTimer.BPM = mAudioPluginEngine.Bank.BPM;
-            lblBPM.Text = mAudioPluginEngine.Bank.BPM.ToString();
+            mAudioPluginEngine.BPM--;
+            mMetronomeTimer.BPM = mAudioPluginEngine.BPM;
+            lblBPM.Text = mAudioPluginEngine.BPM.ToString();
         }
 
         private void lblBPM_DoubleClick(object sender, EventArgs e)
@@ -1053,9 +1053,9 @@ namespace VSTiBox
                 int i;
                 if (int.TryParse(f.Name, out i))
                 {
-                    mAudioPluginEngine.Bank.BPM = i;
-                    mMetronomeTimer.BPM = mAudioPluginEngine.Bank.BPM;
-                    lblBPM.Text = mAudioPluginEngine.Bank.BPM.ToString();
+                    mAudioPluginEngine.BPM = i;
+                    mMetronomeTimer.BPM = mAudioPluginEngine.BPM;
+                    lblBPM.Text = mAudioPluginEngine.BPM.ToString();
                 }
             }
         }

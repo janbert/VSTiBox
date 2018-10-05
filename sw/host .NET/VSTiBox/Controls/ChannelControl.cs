@@ -323,7 +323,7 @@ namespace VSTiBox
                     PluginChannel.InstrumentPlugin.Unload();
 
                     // Wait untill state becomes empty
-                    while (PluginChannel.InstrumentPlugin.State == PluginState.Unloading)
+                    while (PluginChannel.InstrumentPlugin.State == PluginState.Unloading)           // TODO: [JBK] bugfix; hangs if asio driver failed to load
                     {
                         Thread.Sleep(50);
                     }

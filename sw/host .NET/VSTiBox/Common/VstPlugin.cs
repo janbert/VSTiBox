@@ -219,7 +219,7 @@ namespace VSTiBox.Common
                 // Wait for asio callback to handle plugin deactivation to prevent a lock!
                 if (mUnloadingCompleteEvent.Wait(1000) == false)
                 {
-                    MessageBox.Show("Plugin unload event not set by asio callback!");
+                    // Asio driver not firing events and setting mUnloadingCompleteEvent: ignore
                 }
                 mVstPluginContext.PluginCommandStub.StopProcess();
                 mVstPluginContext.PluginCommandStub.MainsChanged(false);
