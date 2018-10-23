@@ -104,7 +104,7 @@ namespace VSTiBox.Common
         public Panel EditorPanel { get; set; }
 
         public VSTPreset VstPreset
-        {  
+        {
             get
             {
                 VSTPreset preset = new VSTPreset();
@@ -115,16 +115,22 @@ namespace VSTiBox.Common
                     preset.Data = GetData();
                 }
                 return preset;
-            } 
+            }
             set
-            {
-                if(value.State != PluginState.Empty )
+            {                
+                if (value.State != PluginState.Empty)
                 {
                     if (value.Data != null)
                     {
                         SetData(value.Data);
                     }
+                    ProgramName = mVstPluginContext.PluginCommandStub.GetProgramName();
                 }
+                else
+                {
+                    ProgramName = string.Empty;
+                }
+
                 if (value.State == PluginState.Activated)
                 {
                     Activate();
@@ -305,8 +311,7 @@ namespace VSTiBox.Common
             else
             {
                 SetParameters(data);
-            }
-            ProgramName = mVstPluginContext.PluginCommandStub.GetProgramName();
+            }            
         }
 
         private void SetParameters(byte[] data)

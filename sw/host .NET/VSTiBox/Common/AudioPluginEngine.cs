@@ -874,6 +874,8 @@ namespace VSTiBox
                         string pluginName = plugin.PluginName;
                         if (requiredPlugins.Contains(pluginName))
                         {
+                            // Close the editor if open
+                            plugin.CloseEditor();                            
                             requiredPlugins.Remove(pluginName);
                             // Move pluginContext from plugin class to local dictionary
                             mRecycledPluginContextDictionary.Add(plugin.VstPluginContext, pluginName);
