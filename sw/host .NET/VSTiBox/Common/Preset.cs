@@ -16,7 +16,8 @@ namespace VSTiBox
         public int KeyZoneLower;
         public int KeyZoneUpper;
         public int Transpose;
-        public ControlPedalAction ControlPedalAction;
+        public ExpressionPedalFunction ExpressionPedalFunction;
+        public bool ExpressionPedalInvert;
         public bool NoteDrop;
         public int NoteDropDelayIndex; 
         public MidiChannel MidiChannel;
@@ -36,9 +37,10 @@ namespace VSTiBox
             
             Volume = 1.0f;
             KeyZoneActive = false;
-            MidiChannel = Common.MidiChannel.Channel1;
+            MidiChannel = MidiChannel.Channel1;
             SustainEnabled = true;
-            ControlPedalAction = Common.ControlPedalAction.EffectControl;
+            ExpressionPedalFunction = ExpressionPedalFunction.EffectControl;
+            ExpressionPedalInvert = false;
             NoteDrop = false;
         }
     }

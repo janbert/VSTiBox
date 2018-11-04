@@ -11,18 +11,18 @@ using System.Windows.Forms;
 
 namespace VSTiBox.Common
 {
-    public enum ControlPedalAction
+    public enum ExpressionPedalFunction
     {
         EffectControl,
         VolumeControl,
         None,
     }
-    
+
     public class VstInstrumentPlugin : VstPlugin
-    {        
+    {
         public int Transpose { get; set; }
         public float Volume { get; set; }  // Range 0.0 ... 1.0 for fast mixing!
-        public float Pan { get;  set; }
+        public float Pan { get; set; }
 
         public bool KeyZoneActive { get; set; }
         public int KeyZoneLower { get; set; }
@@ -31,7 +31,7 @@ namespace VSTiBox.Common
         public Note[] Notes = new Note[256];
         public bool NoteDrop { get; set; }
         public int NoteDropDelay { get; set; }
-        
+
         private int mNotedropDelayIndex;
         public int NoteDropDelayIndex
         {
@@ -74,9 +74,11 @@ namespace VSTiBox.Common
         }
 
         public bool SustainEnabled { get; set; }
-        
-        public ControlPedalAction ControlPedalAction { get; set; }
-  
+
+        public ExpressionPedalFunction ExpressionPedalFunction { get; set; }
+
+        public bool ExpressionPedalInvert {get;set; }
+
         public override void Deactivate()
         {
             base.Deactivate();

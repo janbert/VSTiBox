@@ -455,29 +455,41 @@ namespace VSTiBox
 
                 if (data[0] == 176 && data[1] == 11)
                 {
-                    switch (plugin.ControlPedalAction)
+                    switch (plugin.ExpressionPedalFunction)
                     {
-                        case ControlPedalAction.EffectControl:
+                        case ExpressionPedalFunction.EffectControl:
                             // Re-route foot control to wheel!
                             data[1] = 1;
 
                             if (plugin.UseExtendedEffectRange)
                             {
-                                // Invert direction :)
                                 int wheel = data[2] * 2;
                                 if (wheel > 255) wheel = 255;
-                                data[2] = (byte)(255 - wheel);
+                                // Most plugins use an inverted direction. So default is to invert. 
+                                // If ExpressionPedalInvert; do not invert data 
+                                if (plugin.ExpressionPedalInvert)
+                                {
+                                    data[2] = (byte)wheel;
+                                }
+                                else
+                                {
+                                    data[2] = (byte)(255 - wheel);
+                                }
                             }
                             else
                             {
-                                // Invert direction :)
-                                data[2] = (byte)(127 - data[2]);
+                                // Most plugins use an inverted direction. So default is to invert. 
+                                // If ExpressionPedalInvert; do not invert data 
+                                if (!plugin.ExpressionPedalInvert)
+                                {
+                                    data[2] = (byte)(127 - data[2]);
+                                }
                             }
                             break;
-                        case ControlPedalAction.VolumeControl:
+                        case ExpressionPedalFunction.VolumeControl:
                             // Do nothing; 
                             break;
-                        case ControlPedalAction.None:
+                        case ExpressionPedalFunction.None:
                             // Next for; do not handle this midi command 
                             continue;
                         default:
