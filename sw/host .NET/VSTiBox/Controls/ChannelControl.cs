@@ -44,7 +44,7 @@ namespace VSTiBox
                 if(value != null)
                 {
                     mVstPluginChannel = value;
-                    mVstPluginChannel.PresetImported += mVstPluginChannel_PresetLoaded;
+                    mVstPluginChannel.PresetImported += mVstPluginChannel_PresetImported;
                     foreach (VstPlugin plugin in mVstPluginChannel.AllPlugins)
                     {
                         plugin.StateChanged += Plugin_StateChanged;
@@ -273,7 +273,7 @@ namespace VSTiBox
             }
         }
                 
-        void mVstPluginChannel_PresetLoaded(object sender, ChannelPresetImportEventArgs e)
+        void mVstPluginChannel_PresetImported(object sender, ChannelPresetImportEventArgs e)
         {
             mIgnoreEvents = true;
 
@@ -323,7 +323,7 @@ namespace VSTiBox
                     PluginChannel.InstrumentPlugin.Unload();
 
                     // Wait untill state becomes empty
-                    while (PluginChannel.InstrumentPlugin.State == PluginState.Unloading)
+                    while (PluginChannel.InstrumentPlugin.State == PluginState.Unloading)           // TODO: [JBK] bugfix; hangs if asio driver failed to load
                     {
                         Thread.Sleep(50);
                     }

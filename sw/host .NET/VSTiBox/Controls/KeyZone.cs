@@ -35,9 +35,10 @@ namespace VSTiBox.Controls
             mActiveNotes.Clear();
             mInstrumentPlugin = plugin;                               
             nudTranspose.Value = mInstrumentPlugin.Transpose;
-            rbtnControlPedalEffect.Checked = mInstrumentPlugin.ControlPedalAction == ControlPedalAction.EffectControl;
-            rbtnControlPedalVolume.Checked = mInstrumentPlugin.ControlPedalAction == ControlPedalAction.VolumeControl;
-            rbtnControlPedalNone.Checked = mInstrumentPlugin.ControlPedalAction == ControlPedalAction.None;
+            rbtnControlPedalEffect.Checked = mInstrumentPlugin.ExpressionPedalFunction == ExpressionPedalFunction.EffectControl;
+            cbExpressionInvert.Checked = mInstrumentPlugin.ExpressionPedalInvert;
+            rbtnControlPedalVolume.Checked = mInstrumentPlugin.ExpressionPedalFunction == ExpressionPedalFunction.VolumeControl;
+            rbtnControlPedalNone.Checked = mInstrumentPlugin.ExpressionPedalFunction == ExpressionPedalFunction.None;
             cbNoteDrop.Checked = mInstrumentPlugin.NoteDrop;
             comboNoteDropDelay.Enabled = mInstrumentPlugin.NoteDrop;
             comboNoteDropDelay.SelectedIndex = mInstrumentPlugin.NoteDropDelayIndex;
@@ -206,19 +207,19 @@ namespace VSTiBox.Controls
         private void rbtnControlPedalEffect_CheckedChanged(object sender, EventArgs e)
         {
             if (mIgnoreEvents) return;
-            if (rbtnControlPedalEffect.Checked) mInstrumentPlugin.ControlPedalAction = ControlPedalAction.EffectControl;
+            if (rbtnControlPedalEffect.Checked) mInstrumentPlugin.ExpressionPedalFunction = ExpressionPedalFunction.EffectControl;
         }
 
         private void rbtnControlPedalVolume_CheckedChanged(object sender, EventArgs e)
         {
             if (mIgnoreEvents) return;
-            if (rbtnControlPedalVolume.Checked) mInstrumentPlugin.ControlPedalAction = ControlPedalAction.VolumeControl;
+            if (rbtnControlPedalVolume.Checked) mInstrumentPlugin.ExpressionPedalFunction = ExpressionPedalFunction.VolumeControl;
         }
 
         private void rbtnControlPedalNone_CheckedChanged(object sender, EventArgs e)
         {
             if (mIgnoreEvents) return;
-            if (rbtnControlPedalNone.Checked) mInstrumentPlugin.ControlPedalAction = ControlPedalAction.None;
+            if (rbtnControlPedalNone.Checked) mInstrumentPlugin.ExpressionPedalFunction = ExpressionPedalFunction.None;
         }
 
         private void cbNoteDrop_CheckedChanged(object sender, EventArgs e)
@@ -251,6 +252,12 @@ namespace VSTiBox.Controls
             if (mIgnoreEvents) return;
 
             mInstrumentPlugin.SustainEnabled = cbSustain.Checked;
+        }
+
+        private void cbExpressionInvert_CheckedChanged(object sender, EventArgs e)
+        {
+            if (mIgnoreEvents) return;
+            mInstrumentPlugin.ExpressionPedalInvert = cbExpressionInvert.Checked;
         }
     }
 }

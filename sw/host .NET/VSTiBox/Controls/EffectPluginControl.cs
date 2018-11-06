@@ -15,8 +15,8 @@ namespace VSTiBox
     public partial class EffectPluginControl : UserControl
     {
         private VstPlugin mVstPlugin;
-        private  AudioPluginEngine mAudioPluginEngine;
-        private  bool mIgnoreEvents = true;
+        private AudioPluginEngine mAudioPluginEngine;
+        private bool mIgnoreEvents = true;
 
         public event EventHandler<Boolean> OnEffectInsertChanged;
 
@@ -81,7 +81,7 @@ namespace VSTiBox
             if (cbEffectNames.SelectedItem.ToString() != "None")
             {
                 string effectName = cbEffectNames.SelectedItem.ToString();
-                mVstPlugin.SetVstPluginContext(mAudioPluginEngine.CreateVstPluginContext(effectName) , effectName);
+                mVstPlugin.AttachVstPluginContext(mAudioPluginEngine.CreateVstPluginContext(effectName), effectName);
                 btnEdit.Enabled = true;
             }
 

@@ -1,4 +1,5 @@
-﻿using NAudio.Lame;
+﻿using BlueWave.Interop.Asio;
+using NAudio.Lame;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ namespace VSTiBox
         }
 
 
-        public bool WriteSamples(float[] left, float[] right, int size)
+        public bool WriteSamples(Channel left, Channel right, int size)
         {
             // Convert stereo samples to 2xint16
             int arrSize = size * 2 * 2;

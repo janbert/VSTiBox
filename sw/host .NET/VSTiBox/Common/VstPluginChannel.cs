@@ -79,7 +79,8 @@ namespace VSTiBox.Common
             preset.KeyZoneLower = InstrumentPlugin.KeyZoneLower;
             preset.KeyZoneUpper = InstrumentPlugin.KeyZoneUpper;
             preset.Transpose = InstrumentPlugin.Transpose;
-            preset.ControlPedalAction = InstrumentPlugin.ControlPedalAction;
+            preset.ExpressionPedalFunction = InstrumentPlugin.ExpressionPedalFunction;
+            preset.ExpressionPedalInvert = InstrumentPlugin.ExpressionPedalInvert;
             preset.NoteDrop = InstrumentPlugin.NoteDrop;
             preset.NoteDropDelayIndex = InstrumentPlugin.NoteDropDelayIndex;
             preset.MidiChannel = InstrumentPlugin.MidiChannel;
@@ -103,7 +104,8 @@ namespace VSTiBox.Common
             InstrumentPlugin.KeyZoneLower = preset.KeyZoneLower;
             InstrumentPlugin.KeyZoneUpper = preset.KeyZoneUpper;
             InstrumentPlugin.Transpose = preset.Transpose;
-            InstrumentPlugin.ControlPedalAction = preset.ControlPedalAction;
+            InstrumentPlugin.ExpressionPedalFunction = preset.ExpressionPedalFunction;
+            InstrumentPlugin.ExpressionPedalInvert = preset.ExpressionPedalInvert;
             InstrumentPlugin.NoteDrop = preset.NoteDrop;
             InstrumentPlugin.NoteDropDelayIndex = preset.NoteDropDelayIndex;
             InstrumentPlugin.MidiChannel = preset.MidiChannel;

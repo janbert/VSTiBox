@@ -71,8 +71,15 @@ namespace VSTiBox
             {
                 var cpuHardware = Instance.computer.Hardware.First(x => x.HardwareType == HardwareType.CPU);
                 cpuHardware.Update();
-                var cpuTempSensor = cpuHardware.Sensors.First(x => x.SensorType == SensorType.Temperature);
-                return cpuTempSensor.Value != null ? (float)cpuTempSensor.Value : 0.0f;//  0.0f;//Instance.computer.re .ReadTemperature();
+                var cpuTempSensor = cpuHardware.Sensors.FirstOrDefault(x => x.SensorType == SensorType.Temperature);
+                if ((cpuTempSensor == null) || (cpuTempSensor.Value == null))
+                {
+                    return 0.0f;
+                }
+                else
+                {
+                    return (float)cpuTempSensor.Value;
+                }
             }
         }
 

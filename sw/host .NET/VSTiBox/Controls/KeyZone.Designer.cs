@@ -41,6 +41,7 @@
             this.comboNoteDropDelay = new System.Windows.Forms.ComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.cbSustain = new System.Windows.Forms.CheckBox();
+            this.cbExpressionInvert = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudTranspose)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,9 +110,9 @@
             this.label2.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.label2.Location = new System.Drawing.Point(349, 19);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 13);
+            this.label2.Size = new System.Drawing.Size(144, 13);
             this.label2.TabIndex = 13;
-            this.label2.Text = "MIDI control pedal action";
+            this.label2.Text = "MIDI expression pedal action";
             // 
             // rbtnControlPedalVolume
             // 
@@ -141,7 +142,7 @@
             // 
             this.cbNoteDrop.AutoSize = true;
             this.cbNoteDrop.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.cbNoteDrop.Location = new System.Drawing.Point(521, 35);
+            this.cbNoteDrop.Location = new System.Drawing.Point(618, 35);
             this.cbNoteDrop.Name = "cbNoteDrop";
             this.cbNoteDrop.Size = new System.Drawing.Size(73, 17);
             this.cbNoteDrop.TabIndex = 16;
@@ -169,7 +170,7 @@
             "1",
             "2",
             "4"});
-            this.comboNoteDropDelay.Location = new System.Drawing.Point(600, 33);
+            this.comboNoteDropDelay.Location = new System.Drawing.Point(697, 33);
             this.comboNoteDropDelay.Name = "comboNoteDropDelay";
             this.comboNoteDropDelay.Size = new System.Drawing.Size(55, 21);
             this.comboNoteDropDelay.TabIndex = 17;
@@ -189,7 +190,7 @@
             // 
             this.cbSustain.AutoSize = true;
             this.cbSustain.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.cbSustain.Location = new System.Drawing.Point(521, 58);
+            this.cbSustain.Location = new System.Drawing.Point(618, 58);
             this.cbSustain.Name = "cbSustain";
             this.cbSustain.Size = new System.Drawing.Size(61, 17);
             this.cbSustain.TabIndex = 19;
@@ -197,11 +198,24 @@
             this.cbSustain.UseVisualStyleBackColor = true;
             this.cbSustain.CheckedChanged += new System.EventHandler(this.cbSustain_CheckedChanged);
             // 
+            // cbExpressionInvert
+            // 
+            this.cbExpressionInvert.AutoSize = true;
+            this.cbExpressionInvert.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.cbExpressionInvert.Location = new System.Drawing.Point(499, 19);
+            this.cbExpressionInvert.Name = "cbExpressionInvert";
+            this.cbExpressionInvert.Size = new System.Drawing.Size(53, 17);
+            this.cbExpressionInvert.TabIndex = 20;
+            this.cbExpressionInvert.Text = "Invert";
+            this.cbExpressionInvert.UseVisualStyleBackColor = true;
+            this.cbExpressionInvert.CheckedChanged += new System.EventHandler(this.cbExpressionInvert_CheckedChanged);
+            // 
             // KeyZone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
+            this.Controls.Add(this.cbExpressionInvert);
             this.Controls.Add(this.cbSustain);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.comboNoteDropDelay);
@@ -239,5 +253,6 @@
         private System.Windows.Forms.ComboBox comboNoteDropDelay;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.CheckBox cbSustain;
+        private System.Windows.Forms.CheckBox cbExpressionInvert;
     }
 }

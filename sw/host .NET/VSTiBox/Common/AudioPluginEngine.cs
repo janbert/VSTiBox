@@ -18,7 +18,7 @@ using VSTiBox.Common;
 
 namespace VSTiBox
 {
-    public unsafe class AudioPluginEngine
+    public unsafe class AudioPluginEngine : VstHostCommandBase
     {
         const int NrOfPluginChannels = 8;
 
@@ -29,8 +29,11 @@ namespace VSTiBox
         byte[] mAsioRightInt32LSBBuff;
 #else
         private AsioDriver mAsio;
-        Channel mOutputLeft;
-        Channel mOutputRight;
+        Channel mAsioOutputLeft;    // Audio output to ASIO driver (Currently only 1x stereo)
+        Channel mAsioOutputRight;
+        AudioBufferInfo mAsioInputBuffers;
+        Channel mAsioInputLeft;
+        Channel mAsioInputRight;
 
 #endif
         private bool mIsAsioRunning = false;
@@ -49,13 +52,8 @@ namespace VSTiBox
         private float mMaxVolLeft = 0.0f;
         private float mMaxVolRight = 0.0f;
         private Panel mHostScrollPanel;
-
-        public VstPluginChannel[] PluginChannels { get; private set; }
-        public VstPluginChannel MasterEffectPluginChannel { get; private set; }
-
         private SettingsManager mSettingsMgr;
         private VuMeter[] mVUMeters;
-        private VstTimeInfo mVstTimeInfo = new VstTimeInfo();
         private float mPanLeft = 1.0f;
         private float mPanRight = 1.0f;
         private Stopwatch mCpuLoadStopWatch = new Stopwatch();
@@ -63,8 +61,9 @@ namespace VSTiBox
         private MidiDevice mMidiDevice;
         private MidiMessage[] mMidiInMessages = new MidiMessage[512];
 
-
-
+        public VstPluginChannel[] PluginChannels { get; private set; }
+        public VstPluginChannel MasterEffectPluginChannel { get; private set; }
+    
         /// <summary>
         /// Constructor
         /// </summary>
@@ -130,6 +129,23 @@ namespace VSTiBox
             mMidiPanicEvents[0] = midiPanicEvent;
 
             mMidiDevice = new MidiDevice();
+        }
+
+       
+        public override int BPM
+        {
+            get
+            {
+                return base.BPM;
+            }
+            set
+            {
+                base.BPM = value;
+                if (mActiveBank != null)
+                {
+                    mActiveBank.BPM = value;
+                }                
+            }
         }
 
         public float MasterPan
@@ -238,7 +254,7 @@ namespace VSTiBox
         [DllImport("avrt.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool AvRevertMmThreadCharacteristics(IntPtr avrtHandle);
 
-#if  NAUDIO_ASIO
+#if NAUDIO_ASIO
 #else
         [STAThread]
 #endif
@@ -269,13 +285,13 @@ namespace VSTiBox
             if (mAsio != null)
             {
 #if NAUDIO_ASIO
-                    if (mAsio != null)
-                    {
-                        mWaveProvider = new NAudio.Wave.BufferedWaveProvider(new NAudio.Wave.WaveFormat(44100, 16, 2));
-                        mAsio.InitRecordAndPlayback(mWaveProvider, 2, 44100);
-                        mAsio.AudioAvailable += mAsio_AudioAvailable;
-                        mAsioBuffSize = mSettingsMgr.Settings.AsioBufferSize;
-                    }
+                if (mAsio != null)
+                {
+                    mWaveProvider = new NAudio.Wave.BufferedWaveProvider(new NAudio.Wave.WaveFormat(44100, 16, 2));
+                    mAsio.InitRecordAndPlayback(mWaveProvider, 2, 44100);
+                    mAsio.AudioAvailable += mAsio_AudioAvailable;
+                    mAsioBuffSize = mSettingsMgr.Settings.AsioBufferSize;
+                }
 #else
                 int p = mAsio.BufferSizex.PreferredSize;
                 int max = mAsio.BufferSizex.MaxSize;
@@ -298,8 +314,12 @@ namespace VSTiBox
                 mAsio.CreateBuffers(mAsioBuffSize);
                 // this is our buffer fill event we need to respond to
                 mAsio.BufferUpdate += new EventHandler(asio_BufferUpdateHandler);
-                mOutputLeft = mAsio.OutputChannels[0];
-                mOutputRight = mAsio.OutputChannels[1];
+                mAsioOutputLeft = mAsio.OutputChannels[0];      // Use only 1x stereo out
+                mAsioOutputRight = mAsio.OutputChannels[1];
+
+                mAsioInputBuffers = new AudioBufferInfo(2, mAsioBuffSize);
+                mAsioInputLeft = mAsio.InputChannels[0];        // Use only 1x stereo in
+                mAsioInputRight = mAsio.InputChannels[1];                
 #endif
                 // todo: test
                 //mMixLeft = new float[mAsioBuffSize];
@@ -307,7 +327,7 @@ namespace VSTiBox
 
                 // and off we go
 
-                stopWatchTicksForOneAsioBuffer = Stopwatch.Frequency / (44100 / mAsioBuffSize);
+                stopWatchTicksForOneAsioBuffer = (long)(Stopwatch.Frequency / (mAsio.SampleRate / mAsioBuffSize));
 #if NAUDIO_ASIO
                     mAsioLeftInt32LSBBuff = new byte[mAsioBuffSize * 4];
                     mAsioRightInt32LSBBuff = new byte[mAsioBuffSize * 4];
@@ -319,7 +339,7 @@ namespace VSTiBox
 
                 // Keep running untill stop request!
                 mAsioStopEvent.Wait();
-                stopAsio();
+                StopAsio();
             }
             else
             {
@@ -330,15 +350,32 @@ namespace VSTiBox
 
         public void Stop()
         {
+            foreach (VstPluginChannel ch in PluginChannels)
+            {
+                foreach (VstPlugin effectPlugin in ch.EffectPlugins)
+                {
+                    StopPlugin(effectPlugin);
+                }
+                StopPlugin(ch.InstrumentPlugin);
+            }
+            
             if (mIsAsioRunning)
             {
                 mAsioStopCompleteEvent.Reset();
                 mAsioStopEvent.Set();
                 mAsioStopCompleteEvent.Wait();
             }
+
+            if (mMp3Recorder != null)
+            {
+                mMp3Recorder.Close();
+            }
+
+
+            mMidiDevice.CloseAllInPorts();
         }
 
-        private void stopPlugin(VstPlugin plugin)
+        private void StopPlugin(VstPlugin plugin)
         {
             if (plugin.State == PluginState.Activated)
             {
@@ -351,24 +388,9 @@ namespace VSTiBox
             }
         }
 
-        private void stopAsio()
+        private void StopAsio()
         {
-            if (mMp3Recorder != null)
-            {
-                mMp3Recorder.Close();
-            }
-
-            foreach (VstPluginChannel ch in PluginChannels)
-            {
-                foreach (VstPlugin effectPlugin in ch.EffectPlugins)
-                {
-                    stopPlugin(effectPlugin);
-                }
-                stopPlugin(ch.InstrumentPlugin);
-            }
-
-            mMidiDevice.CloseAllInPorts();
-
+            
             if (mAsio != null)
             {
                 mAsio.Stop();
@@ -435,29 +457,41 @@ namespace VSTiBox
 
                 if (data[0] == 176 && data[1] == 11)
                 {
-                    switch (plugin.ControlPedalAction)
+                    switch (plugin.ExpressionPedalFunction)
                     {
-                        case ControlPedalAction.EffectControl:
+                        case ExpressionPedalFunction.EffectControl:
                             // Re-route foot control to wheel!
                             data[1] = 1;
 
                             if (plugin.UseExtendedEffectRange)
                             {
-                                // Invert direction :)
                                 int wheel = data[2] * 2;
                                 if (wheel > 255) wheel = 255;
-                                data[2] = (byte)(255 - wheel);
+                                // Most plugins use an inverted direction. So default is to invert. 
+                                // If ExpressionPedalInvert; do not invert data 
+                                if (plugin.ExpressionPedalInvert)
+                                {
+                                    data[2] = (byte)wheel;
+                                }
+                                else
+                                {
+                                    data[2] = (byte)(255 - wheel);
+                                }
                             }
                             else
                             {
-                                // Invert direction :)
-                                data[2] = (byte)(127 - data[2]);
+                                // Most plugins use an inverted direction. So default is to invert. 
+                                // If ExpressionPedalInvert; do not invert data 
+                                if (!plugin.ExpressionPedalInvert)
+                                {
+                                    data[2] = (byte)(127 - data[2]);
+                                }
                             }
                             break;
-                        case ControlPedalAction.VolumeControl:
+                        case ExpressionPedalFunction.VolumeControl:
                             // Do nothing; 
                             break;
-                        case ControlPedalAction.None:
+                        case ExpressionPedalFunction.None:
                             // Next for; do not handle this midi command 
                             continue;
                         default:
@@ -592,11 +626,11 @@ namespace VSTiBox
                 mFirstAsioBufferUpdateHandlerCall = false;
             }
 
-            // Clear buffer
+            // Clear output buffer
             for (int index = 0; index < mAsioBuffSize; index++)
             {
-                mOutputLeft[index] = 0.0f;
-                mOutputRight[index] = 0.0f;
+                mAsioOutputLeft[index] = 0.0f;
+                mAsioOutputRight[index] = 0.0f;
             }
 
             // Dequeue all midi in messages            
@@ -612,11 +646,24 @@ namespace VSTiBox
             midiInCount = mMidiDevice.DequeueMidiInMessages(mMidiInMessages, 0, midiInCount);
 
             for (int i = 0; i < NrOfPluginChannels; i++)
-            {
+            {               
                 bool midiPanic = mMidiPanic[i];
                 mMidiPanic[i] = false;
 
                 VstPluginChannel channel = PluginChannels[i];
+
+                // Copy Asio input to channel input
+                // todo: [JBK] point the VstChannel input buffer directly tot the input buffer from the asio driver to prevent all the copying. 
+                // For now just try this if it works
+                if (channel.InputBuffers.Count > 0)
+                {
+                    for (int n = 0; n < mAsioBuffSize; ++n)
+                    {
+                        channel.InputBuffers.Raw[0][n] = mAsioInputLeft[n];
+                        channel.InputBuffers.Raw[1][n] = mAsioInputRight[n];
+                    }
+                }
+
                 if (channel.InstrumentPlugin.State == PluginState.Empty)
                 {
                     continue;
@@ -691,14 +738,14 @@ namespace VSTiBox
                     if (swappedBuffers)
                     {
                         // todo: Pan 
-                        mOutputLeft[index] += channel.InputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
-                        mOutputRight[index] += channel.InputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputLeft[index] += channel.InputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputRight[index] += channel.InputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
                     }
                     else
                     {
                         // todo: Pan 
-                        mOutputLeft[index] += channel.OutputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
-                        mOutputRight[index] += channel.OutputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputLeft[index] += channel.OutputBuffers.Raw[0][index] * channel.InstrumentPlugin.Volume;
+                        mAsioOutputRight[index] += channel.OutputBuffers.Raw[1][index] * channel.InstrumentPlugin.Volume;
                     }
                 }
             }
@@ -712,24 +759,24 @@ namespace VSTiBox
             for (int index = 0; index < mAsioBuffSize; index++)
             {
                 // Master pan
-                mOutputLeft[index] *= mPanLeft;
-                mOutputRight[index] *= mPanRight;
+                mAsioOutputLeft[index] *= mPanLeft;
+                mAsioOutputRight[index] *= mPanRight;
 
                 // Get max volume levels
-                if (mOutputLeft[index] > mMaxVolLeft) mMaxVolLeft = mOutputLeft[index];
-                if (mOutputRight[index] > mMaxVolRight) mMaxVolRight = mOutputRight[index];
+                if (mAsioOutputLeft[index] > mMaxVolLeft) mMaxVolLeft = mAsioOutputLeft[index];
+                if (mAsioOutputRight[index] > mMaxVolRight) mMaxVolRight = mAsioOutputRight[index];
             }
             mVUMeters[0].Value = mMaxVolLeft;
             mVUMeters[1].Value = mMaxVolRight;
 
-            // todo: [JBK] put back
-            //lock (mMP3RecorderLockObj)
-            //{
-            //    if (mMp3Recorder != null)
-            //    {
-            //        mMp3Recorder.WriteSamples(mMixLeft, mMixRight, mAsioBuffSize);
-            //    }
-            //}      
+            
+            lock (mMP3RecorderLockObj)
+            {
+                if (mMp3Recorder != null)
+                {
+                    mMp3Recorder.WriteSamples(mAsioOutputLeft, mAsioOutputRight, mAsioBuffSize);
+                }
+            }      
 
 #if NAUDIO_ASIO
             // Copy mix            
@@ -751,7 +798,7 @@ namespace VSTiBox
             e.WrittenToOutputBuffers = true;
 #else
             // Start buffer calculations for next asio call.
-            mVstTimeInfo.SamplePosition++;
+            VstTimeInfo.SamplePosition++;
 #endif
             int cpuLoad = 0;
             long elapsedTicksDuringHandler = mCpuLoadStopWatch.ElapsedTicks;
@@ -775,9 +822,9 @@ namespace VSTiBox
         }
 #endif
 
-        private void hostCmdStub_PluginCalled(object sender, PluginCalledEventArgs e)
+        /*private void hostCmdStub_PluginCalled(object sender, PluginCalledEventArgs e)
         {
-            HostCommandStub hostCmdStub = (HostCommandStub)sender;
+            VstHostCommandBase hostCmdStub = (VstHostCommandBase)sender;
 
             // can be null when called from inside the plugin main entry point.
             if (hostCmdStub.PluginContext.PluginInfo != null)
@@ -788,37 +835,38 @@ namespace VSTiBox
             {
                 Debug.WriteLine("The loading Plugin called:" + e.Message);
             }
-        }
+        }*/
 
 
         private Dictionary<VstPluginContext, string> mRecycledPluginContextDictionary = new Dictionary<VstPluginContext, string>();
 
-        private Bank mBank;
-        public Bank Bank
+        private Bank mActiveBank = null;
+        public Bank ActiveBank
         {
             get
             {
-                return mBank;
+                return mActiveBank;
             }
         }
 
         public void LoadBank(Bank bank)
         {
-            mBank = bank;
+            mActiveBank = bank;
             bool firstEditorLoaded = false;
 
             // Make a list of required plugins that can be re-used from currently active plugins. Unload all others
             List<string> requiredPlugins = new List<string>();
 
-            if (mBank != null)
-            {
+            if (bank != null)
+            {                
+                BPM = bank.BPM;
                 for (int i = 0; i < 8; i++)
                 {
-                    if (mBank.Presets[i].InstrumentVstPreset.State != PluginState.Empty)
+                    if (bank.Presets[i].InstrumentVstPreset.State != PluginState.Empty)
                     {
-                        requiredPlugins.Add(mBank.Presets[i].InstrumentVstPreset.Name);
+                        requiredPlugins.Add(bank.Presets[i].InstrumentVstPreset.Name);
                     }
-                    var res = mBank.Presets[i].EffectVstPresets.Where(n => n.State != PluginState.Empty).Select(x => x.Name);
+                    var res = bank.Presets[i].EffectVstPresets.Where(n => n.State != PluginState.Empty).Select(x => x.Name);
                     if (res.Count() > 0)
                     {
                         requiredPlugins.AddRange(res.ToArray());
@@ -840,11 +888,13 @@ namespace VSTiBox
                         string pluginName = plugin.PluginName;
                         if (requiredPlugins.Contains(pluginName))
                         {
+                            // Close the editor if open
+                            plugin.CloseEditor();                            
                             requiredPlugins.Remove(pluginName);
                             // Move pluginContext from plugin class to local dictionary
                             mRecycledPluginContextDictionary.Add(plugin.VstPluginContext, pluginName);
-                            // Remove object reference from plugin class
-                            plugin.SetVstPluginContext(null,null);
+                            // Remove object reference from plugin class and stop plugin audio
+                            plugin.DetachVstPluginContext();
                         }
                         else
                         {
@@ -857,9 +907,9 @@ namespace VSTiBox
             // Now load new plugins
             for (int i = 0; i < 8; i++)
             {
-                if (mBank != null)
+                if (bank != null)
                 {
-                    ChannelPreset preset = mBank.Presets[i];
+                    ChannelPreset preset = bank.Presets[i];
 
                     LoadChannelPreset(PluginChannels[i], preset);
 
@@ -902,7 +952,7 @@ namespace VSTiBox
             // First load instrument
             if (channelPreset.InstrumentVstPreset.State != PluginState.Empty)
             {
-                channel.InstrumentPlugin.SetVstPluginContext( GetVstPluginContext(channelPreset.InstrumentVstPreset.Name),channelPreset.InstrumentVstPreset.Name);
+                channel.InstrumentPlugin.AttachVstPluginContext(GetVstPluginContext(channelPreset.InstrumentVstPreset.Name), channelPreset.InstrumentVstPreset.Name);
             }
 
             // Then load all effects            
@@ -910,7 +960,7 @@ namespace VSTiBox
             {
                 if (channelPreset.EffectVstPresets[i].State != PluginState.Empty)
                 {
-                    channel.EffectPlugins[i].SetVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name),channelPreset.EffectVstPresets[i].Name);
+                    channel.EffectPlugins[i].AttachVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name), channelPreset.EffectVstPresets[i].Name);
                 }
             }
 
@@ -945,22 +995,22 @@ namespace VSTiBox
 
             try
             {
-                HostCommandStub hostCmdStub = new HostCommandStub(mVstTimeInfo, mBank);
-                hostCmdStub.PluginCalled += new EventHandler<PluginCalledEventArgs>(hostCmdStub_PluginCalled);
-                pluginContext = VstPluginContext.Create(pluginPath, hostCmdStub);
+                //VstHostCommandBase hostCmdStub = new VstHostCommandBase(this);
+                //hostCmdStub.PluginCalled += hostCmdStub_PluginCalled;
+                pluginContext = VstPluginContext.Create(pluginPath, this);
 
                 // add custom data to the context
                 pluginContext.Set("PluginPath", pluginName);
-                pluginContext.Set("HostCmdStub", hostCmdStub);
+                pluginContext.Set("HostCmdStub", this);
 
                 // actually open the plugin itself
                 pluginContext.PluginCommandStub.Open();
                 pluginContext.PluginCommandStub.SetBlockSize(mAsioBuffSize);
-                pluginContext.PluginCommandStub.SetSampleRate(44100f);
-
-                // wrap these in using statements to automatically call Dispose and cleanup the unmanaged memory.
-                pluginContext.PluginCommandStub.MainsChanged(true);
-                pluginContext.PluginCommandStub.StartProcess();
+                if (mAsio != null)
+                {
+                    pluginContext.PluginCommandStub.SetSampleRate((float)mAsio.SampleRate);
+                }
+                pluginContext.PluginCommandStub.SetProcessPrecision(VstProcessPrecision.Process32);
             }
             catch (Exception e)
             {
@@ -973,12 +1023,12 @@ namespace VSTiBox
         {
             for (int i = 0; i < 8; i++)
             {
-                mBank.Presets[i] = PluginChannels[i].ExportChannelPreset();
+                mActiveBank.Presets[i] = PluginChannels[i].ExportChannelPreset();
 
-                ChannelPreset preset = mBank.Presets[i];
+                ChannelPreset preset = mActiveBank.Presets[i];
 
             }
-            mSettingsMgr.SaveBank(mBank);
+            mSettingsMgr.SaveBank(mActiveBank);
         }
 
 
@@ -1018,12 +1068,12 @@ namespace VSTiBox
 
                     try
                     {
-                        HostCommandStub tmpHostCmdStub = new HostCommandStub(mVstTimeInfo, null);
-                        using (VstPluginContext ctx = VstPluginContext.Create(file.FullName, tmpHostCmdStub))
+                        //VstHostCommandBase tmpHostCmdStub = new VstHostCommandBase(this);
+                        using (VstPluginContext ctx = VstPluginContext.Create(file.FullName, this))
                         {
                             // add custom data to the context
                             ctx.Set("PluginPath", file.FullName);
-                            ctx.Set("HostCmdStub", tmpHostCmdStub);
+                            ctx.Set("HostCmdStub", this);
 
                             VstInfo info = new VstInfo();
 
