@@ -73,3 +73,5 @@ sw/host \.NET/DirectMidi\.Interop/Debug/
 sw/host \.NET/OpenHardwareMonitor/Bin/Debug/
 
 *.user
+
+*.opensdf

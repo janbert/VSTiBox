@@ -109,7 +109,7 @@ namespace VSTiBox
         private void MainForm_Load(object sender, EventArgs e)
         {
             mIgnoreEvents = true;
-            PopupForm popup = new PopupForm("Loading VSTiBox v2.0", -1);
+            PopupForm popup = new PopupForm("Loading VSTiBox v2.1", -1);
             popup.Show();
             Application.DoEvents();
 
