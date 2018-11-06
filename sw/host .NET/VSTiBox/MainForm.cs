@@ -1024,11 +1024,18 @@ namespace VSTiBox
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (mAudioPluginEngine != null)
+            if (this.InvokeRequired)
             {
-                mAudioPluginEngine.Stop();
+                this.Invoke(new Action(() => MainForm_FormClosing(sender, e)));
             }
-            mBoardManager.Close();
+            else
+            {
+                if (mAudioPluginEngine != null)
+                {
+                    mAudioPluginEngine.Stop();
+                }
+                mBoardManager.Close();
+            }
         }
 
         private void pbBPMUp_Click(object sender, EventArgs e)

@@ -339,7 +339,7 @@ namespace VSTiBox
 
                 // Keep running untill stop request!
                 mAsioStopEvent.Wait();
-                stopAsio();
+                StopAsio();
             }
             else
             {
@@ -350,15 +350,32 @@ namespace VSTiBox
 
         public void Stop()
         {
+            foreach (VstPluginChannel ch in PluginChannels)
+            {
+                foreach (VstPlugin effectPlugin in ch.EffectPlugins)
+                {
+                    StopPlugin(effectPlugin);
+                }
+                StopPlugin(ch.InstrumentPlugin);
+            }
+            
             if (mIsAsioRunning)
             {
                 mAsioStopCompleteEvent.Reset();
                 mAsioStopEvent.Set();
                 mAsioStopCompleteEvent.Wait();
             }
+
+            if (mMp3Recorder != null)
+            {
+                mMp3Recorder.Close();
+            }
+
+
+            mMidiDevice.CloseAllInPorts();
         }
 
-        private void stopPlugin(VstPlugin plugin)
+        private void StopPlugin(VstPlugin plugin)
         {
             if (plugin.State == PluginState.Activated)
             {
@@ -371,24 +388,9 @@ namespace VSTiBox
             }
         }
 
-        private void stopAsio()
+        private void StopAsio()
         {
-            if (mMp3Recorder != null)
-            {
-                mMp3Recorder.Close();
-            }
-
-            foreach (VstPluginChannel ch in PluginChannels)
-            {
-                foreach (VstPlugin effectPlugin in ch.EffectPlugins)
-                {
-                    stopPlugin(effectPlugin);
-                }
-                stopPlugin(ch.InstrumentPlugin);
-            }
-
-            mMidiDevice.CloseAllInPorts();
-
+            
             if (mAsio != null)
             {
                 mAsio.Stop();
@@ -891,8 +893,8 @@ namespace VSTiBox
                             requiredPlugins.Remove(pluginName);
                             // Move pluginContext from plugin class to local dictionary
                             mRecycledPluginContextDictionary.Add(plugin.VstPluginContext, pluginName);
-                            // Remove object reference from plugin class
-                            plugin.SetVstPluginContext(null,null);
+                            // Remove object reference from plugin class and stop plugin audio
+                            plugin.DetachVstPluginContext();
                         }
                         else
                         {
@@ -950,7 +952,7 @@ namespace VSTiBox
             // First load instrument
             if (channelPreset.InstrumentVstPreset.State != PluginState.Empty)
             {
-                channel.InstrumentPlugin.SetVstPluginContext( GetVstPluginContext(channelPreset.InstrumentVstPreset.Name),channelPreset.InstrumentVstPreset.Name);
+                channel.InstrumentPlugin.AttachVstPluginContext(GetVstPluginContext(channelPreset.InstrumentVstPreset.Name), channelPreset.InstrumentVstPreset.Name);
             }
 
             // Then load all effects            
@@ -958,7 +960,7 @@ namespace VSTiBox
             {
                 if (channelPreset.EffectVstPresets[i].State != PluginState.Empty)
                 {
-                    channel.EffectPlugins[i].SetVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name),channelPreset.EffectVstPresets[i].Name);
+                    channel.EffectPlugins[i].AttachVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name), channelPreset.EffectVstPresets[i].Name);
                 }
             }
 
@@ -996,7 +998,7 @@ namespace VSTiBox
                 //VstHostCommandBase hostCmdStub = new VstHostCommandBase(this);
                 //hostCmdStub.PluginCalled += hostCmdStub_PluginCalled;
                 pluginContext = VstPluginContext.Create(pluginPath, this);
-                
+
                 // add custom data to the context
                 pluginContext.Set("PluginPath", pluginName);
                 pluginContext.Set("HostCmdStub", this);
@@ -1008,9 +1010,7 @@ namespace VSTiBox
                 {
                     pluginContext.PluginCommandStub.SetSampleRate((float)mAsio.SampleRate);
                 }
-                // wrap these in using statements to automatically call Dispose and cleanup the unmanaged memory.
-                pluginContext.PluginCommandStub.MainsChanged(true);
-                pluginContext.PluginCommandStub.StartProcess();
+                pluginContext.PluginCommandStub.SetProcessPrecision(VstProcessPrecision.Process32);
             }
             catch (Exception e)
             {

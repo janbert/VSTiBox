@@ -146,44 +146,47 @@ namespace VSTiBox.Common
             }
         }
 
-        public void SetVstPluginContext(VstPluginContext ctx, string name)
+        public void AttachVstPluginContext(VstPluginContext ctx, string name)
         {
-            // Todo: JBK ; still after MainsChanged and StartProcess; ok?
-            if (ctx != null)
+            mVstPluginContext = ctx;
+            // Create big enough buffers to fit all plugin types
+            int inSize = 32; // value.PluginInfo.AudioInputCount;
+            int outSize = 64;// value.PluginInfo.AudioOutputCount;
+
+            if (mAsioBuffSize != 0)
             {
-                // Create big enough buffers to fit all plugin types
-                int inSize = 32; // value.PluginInfo.AudioInputCount;
-                int outSize = 64;// value.PluginInfo.AudioOutputCount;
-
-                if (mAsioBuffSize != 0)
+                if (InputBuffers == null || inSize != InputBuffers.Count)
                 {
-                    if (InputBuffers == null || inSize != InputBuffers.Count)
-                    {
-                        InputBuffers = null;    // Dispose first if already existed!
-                        InputBuffers = new AudioBufferInfo(inSize, mParentInBuffers);
-                    }
-
-                    if (OutputBuffers == null || outSize != OutputBuffers.Count)
-                    {
-                        OutputBuffers = null;    // Dispose first if already existed!
-                        OutputBuffers = new AudioBufferInfo(outSize, mParentOutBuffers);
-                    }
+                    InputBuffers = null;    // Dispose first if already existed!
+                    InputBuffers = new AudioBufferInfo(inSize, mParentInBuffers);
                 }
 
-                PluginName = name;                 
-                ProgramName = ctx.PluginCommandStub.GetProgramName(); 
-                UseExtendedEffectRange = (PluginName == "Nexus");
-                State = PluginState.Deactivated;
+                if (OutputBuffers == null || outSize != OutputBuffers.Count)
+                {
+                    OutputBuffers = null;    // Dispose first if already existed!
+                    OutputBuffers = new AudioBufferInfo(outSize, mParentOutBuffers);
+                }
             }
-            else
-            {
-                PluginName = string.Empty;
-                ProgramName = string.Empty;
-                State = PluginState.Empty;
-            }
-            mVstPluginContext = ctx;
+
+            ctx.PluginCommandStub.MainsChanged(true);
+            ctx.PluginCommandStub.StartProcess();
+
+            State = PluginState.Deactivated;
+
+            PluginName = name;
+            ProgramName = ctx.PluginCommandStub.GetProgramName();
+            UseExtendedEffectRange = (PluginName == "Nexus");
         }
-        
+
+        public void DetachVstPluginContext()
+        {
+            PluginName = string.Empty;
+            ProgramName = string.Empty;
+            State = PluginState.Empty;
+            mVstPluginContext.PluginCommandStub.StopProcess();
+            mVstPluginContext.PluginCommandStub.MainsChanged(false);
+            mVstPluginContext = null;
+        }
 
         public virtual void Deactivate()
         {
@@ -203,6 +206,7 @@ namespace VSTiBox.Common
             mUnloadingCompleteEvent.Set();
             State = PluginState.Empty;
             PluginName = string.Empty;
+            ProgramName = string.Empty;
         }
 
         public void Unload()
@@ -223,7 +227,7 @@ namespace VSTiBox.Common
                 mUnloadingCompleteEvent.Reset();
                 State = PluginState.Unloading;
                 // Wait for asio callback to handle plugin deactivation to prevent a lock!
-                if (mUnloadingCompleteEvent.Wait(1000) == false)
+                if (mUnloadingCompleteEvent.Wait(100) == false)
                 {
                     // Asio driver not firing events and setting mUnloadingCompleteEvent: ignore
                 }

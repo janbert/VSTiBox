@@ -15,7 +15,7 @@ namespace VSTiBox
         public VstAudioBuffer[] Buffers { get; private set; }
 
         private VstAudioBufferManager mVstAudioBufferManager;
-        
+
         public AudioBufferInfo(int count, int blockSize)
         {
             Count = count;
@@ -38,24 +38,23 @@ namespace VSTiBox
         {
             // Create child from existing parent buffers
             Count = count;
-            
+
             Raw = new float*[count];
-            Buffers = new VstAudioBuffer[count];            
+            Buffers = new VstAudioBuffer[count];
 
             // Point to parent
             for (int i = 0; i < count; i++)
             {
                 Buffers[i] = parentBuffer.Buffers[i];
-                Raw[i] = parentBuffer.Raw[i]; 
+                Raw[i] = parentBuffer.Raw[i];
             }
         }
 
         void IDisposable.Dispose()
         {
-            if(mVstAudioBufferManager!=null)
-            { 
+            if (mVstAudioBufferManager != null)
+            {
                 mVstAudioBufferManager.Dispose();
-        
             }
         }
     }
