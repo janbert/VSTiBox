@@ -85,8 +85,10 @@ namespace VSTiBox.Common
             preset.NoteDropDelayIndex = InstrumentPlugin.NoteDropDelayIndex;
             preset.MidiChannel = InstrumentPlugin.MidiChannel;
             preset.SustainEnabled = InstrumentPlugin.SustainEnabled;
+            preset.KeyboardVelocityOffset = InstrumentPlugin.KeyboardVelocityOffset;
+            preset.KeyboardVelocityGain = InstrumentPlugin.KeyboardVelocityGain;
 
-            preset.InstrumentVstPreset = InstrumentPlugin.VstPreset;
+        preset.InstrumentVstPreset = InstrumentPlugin.VstPreset;
 
             for(int i=0; i < NumberOfEffectPlugins ; i++)
             {
@@ -111,6 +113,8 @@ namespace VSTiBox.Common
             InstrumentPlugin.MidiChannel = preset.MidiChannel;
             InstrumentPlugin.SustainEnabled = preset.SustainEnabled;
             InstrumentPlugin.VstPreset = preset.InstrumentVstPreset;
+            InstrumentPlugin.KeyboardVelocityOffset = preset.KeyboardVelocityOffset;
+            InstrumentPlugin.KeyboardVelocityGain = preset.KeyboardVelocityGain;
 
             for (int i = 0; i < NumberOfEffectPlugins; i++)
             {

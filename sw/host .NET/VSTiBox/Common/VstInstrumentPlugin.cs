@@ -75,6 +75,10 @@ namespace VSTiBox.Common
 
         public bool SustainEnabled { get; set; }
 
+        public int KeyboardVelocityOffset { get; set; }
+
+        public float KeyboardVelocityGain { get; set; }
+
         public ExpressionPedalFunction ExpressionPedalFunction { get; set; }
 
         public bool ExpressionPedalInvert {get;set; }

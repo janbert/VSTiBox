@@ -15,11 +15,11 @@ namespace VSTiBox.Controls
     {
         private VstInstrumentPlugin mInstrumentPlugin;
         private AudioPluginEngine mPluginManager;
-        private List<int> mActiveNotes = new List<int>(); 
+        private List<int> mActiveNotes = new List<int>();
 
         public KeyZone()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         public void SetPluginManager(AudioPluginEngine manager)
@@ -33,7 +33,7 @@ namespace VSTiBox.Controls
             mIgnoreEvents = true;
 
             mActiveNotes.Clear();
-            mInstrumentPlugin = plugin;                               
+            mInstrumentPlugin = plugin;
             nudTranspose.Value = mInstrumentPlugin.Transpose;
             rbtnControlPedalEffect.Checked = mInstrumentPlugin.ExpressionPedalFunction == ExpressionPedalFunction.EffectControl;
             cbExpressionInvert.Checked = mInstrumentPlugin.ExpressionPedalInvert;
@@ -43,6 +43,8 @@ namespace VSTiBox.Controls
             comboNoteDropDelay.Enabled = mInstrumentPlugin.NoteDrop;
             comboNoteDropDelay.SelectedIndex = mInstrumentPlugin.NoteDropDelayIndex;
             cbSustain.Checked = mInstrumentPlugin.SustainEnabled;
+            nudKeyboardVelocityOffset.Value = mInstrumentPlugin.KeyboardVelocityOffset;
+            nudKeyboardVelocityGain.Value = (int)(mInstrumentPlugin.KeyboardVelocityGain * 100.0f);
 
             // Set keys according to channel info
             if (mInstrumentPlugin.KeyZoneActive)
@@ -68,12 +70,12 @@ namespace VSTiBox.Controls
 
         private void pianoControl1_PianoKeyDown(object sender, PianoKeyEvent e)
         {
-//            mMidiMgr.RecvMidiMsg(0, 0, Kernel32Midi.ShortMsg.EncodeNoteOn(Kernel32Midi.Channel.Channel1, (Kernel32Midi.Pitch)e.KeyNumber, 100)); 
+            //            mMidiMgr.RecvMidiMsg(0, 0, Kernel32Midi.ShortMsg.EncodeNoteOn(Kernel32Midi.Channel.Channel1, (Kernel32Midi.Pitch)e.KeyNumber, 100)); 
         }
 
         private void pianoControl1_PianoKeyUp(object sender, PianoKeyEvent e)
         {
-  //          mMidiMgr.RecvMidiMsg(0, 0, Kernel32Midi.ShortMsg.EncodeNoteOff(Kernel32Midi.Channel.Channel1, (Kernel32Midi.Pitch)e.KeyNumber, 100));
+            //          mMidiMgr.RecvMidiMsg(0, 0, Kernel32Midi.ShortMsg.EncodeNoteOff(Kernel32Midi.Channel.Channel1, (Kernel32Midi.Pitch)e.KeyNumber, 100));
         }
 
         private void keyDown(int nr)
@@ -81,7 +83,7 @@ namespace VSTiBox.Controls
             if (!mActiveNotes.Contains(nr))
             {
                 mActiveNotes.Add(nr);
-                setRange(true );
+                setRange(true);
             }
         }
 
@@ -90,7 +92,7 @@ namespace VSTiBox.Controls
             if (mActiveNotes.Contains(nr))
             {
                 mActiveNotes.Remove(nr);
-                setRange(false );
+                setRange(false);
             }
         }
 
@@ -144,7 +146,7 @@ namespace VSTiBox.Controls
                 mInstrumentPlugin.KeyZoneActive = true;
                 mInstrumentPlugin.KeyZoneLower = rangeLower;
                 mInstrumentPlugin.KeyZoneUpper = rangeUpper;
-   
+
                 if (rangeLower > Piano.LowestKeyNumer)
                 {
                     pianoControl1.TurnRangeKeysOff(Piano.LowestKeyNumer, rangeLower - 1);
@@ -169,7 +171,7 @@ namespace VSTiBox.Controls
                 }
                 else
                 {
-                    mPluginManager.MidiInMessageReceived -= mPluginManager_MidiInMessageReceived; 
+                    mPluginManager.MidiInMessageReceived -= mPluginManager_MidiInMessageReceived;
                 }
             }
         }
@@ -177,11 +179,11 @@ namespace VSTiBox.Controls
         void mPluginManager_MidiInMessageReceived(object sender, MidiMessageEventArgs e)
         {
             int pitch;
-            if (e.MidiMessage.IsNoteOn (out pitch))
+            if (e.MidiMessage.IsNoteOn(out pitch))
             {
-                this.BeginInvoke(new Action(() =>  keyDown(pitch)));
+                this.BeginInvoke(new Action(() => keyDown(pitch)));
             }
-            else if (e.MidiMessage.IsNoteOff (out pitch))
+            else if (e.MidiMessage.IsNoteOff(out pitch))
             {
                 this.BeginInvoke(new Action(() => keyUp(pitch)));
             }
@@ -258,6 +260,16 @@ namespace VSTiBox.Controls
         {
             if (mIgnoreEvents) return;
             mInstrumentPlugin.ExpressionPedalInvert = cbExpressionInvert.Checked;
+        }
+
+        private void nudKeyboardVelocityOffset_ValueChanged(object sender, EventArgs e)
+        {
+            mInstrumentPlugin.KeyboardVelocityOffset = (int)nudKeyboardVelocityOffset.Value;
+        }
+
+        private void nudKeyboardVelocityGain_ValueChanged(object sender, EventArgs e)
+        {
+            mInstrumentPlugin.KeyboardVelocityGain = (float)nudKeyboardVelocityGain.Value / 100.0f;
         }
     }
 }

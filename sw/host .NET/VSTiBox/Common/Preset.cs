@@ -7,11 +7,11 @@ namespace VSTiBox
 {
     [Serializable]
     public class ChannelPreset
-    {   
+    {
         public const int NumberOfEffectPlugins = 8;
 
         public float Volume;
-        public float Pan;               
+        public float Pan;
         public Boolean KeyZoneActive;
         public int KeyZoneLower;
         public int KeyZoneUpper;
@@ -19,9 +19,11 @@ namespace VSTiBox
         public ExpressionPedalFunction ExpressionPedalFunction;
         public bool ExpressionPedalInvert;
         public bool NoteDrop;
-        public int NoteDropDelayIndex; 
+        public int NoteDropDelayIndex;
         public MidiChannel MidiChannel;
         public bool SustainEnabled;
+        public int KeyboardVelocityOffset;
+        public float KeyboardVelocityGain;
         public VSTPreset InstrumentVstPreset;
         public VSTPreset[] EffectVstPresets;
 
@@ -34,7 +36,7 @@ namespace VSTiBox
                 EffectVstPresets[i] = new VSTPreset();
                 EffectVstPresets[i].State = PluginState.Empty;
             }
-            
+
             Volume = 1.0f;
             KeyZoneActive = false;
             MidiChannel = MidiChannel.Channel1;
@@ -42,6 +44,8 @@ namespace VSTiBox
             ExpressionPedalFunction = ExpressionPedalFunction.EffectControl;
             ExpressionPedalInvert = false;
             NoteDrop = false;
+            KeyboardVelocityOffset = 0;
+            KeyboardVelocityGain = 1.0f;
         }
     }
 

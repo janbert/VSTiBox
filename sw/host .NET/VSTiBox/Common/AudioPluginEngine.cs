@@ -509,7 +509,7 @@ namespace VSTiBox
                         continue;
                     }
                     plugin.Notes[pitch].Pressed = true;
-                    plugin.Notes[pitch].Velocity = data[2];
+                    plugin.Notes[pitch].Velocity =  (byte)Math.Min(127,  Math.Max(0, (int)(data[2] * plugin.KeyboardVelocityGain) + plugin.KeyboardVelocityOffset));
                     newEv.Data[1] += (byte)plugin.Transpose;
                     mFilteredMidiEvents.Add(newEv);
                 }

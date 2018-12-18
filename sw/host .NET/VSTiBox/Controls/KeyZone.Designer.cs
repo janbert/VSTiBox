@@ -42,7 +42,14 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.cbSustain = new System.Windows.Forms.CheckBox();
             this.cbExpressionInvert = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.nudKeyboardVelocityOffset = new System.Windows.Forms.NumericUpDown();
+            this.nudKeyboardVelocityGain = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nudTranspose)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudKeyboardVelocityOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudKeyboardVelocityGain)).BeginInit();
             this.SuspendLayout();
             // 
             // label6
@@ -210,11 +217,77 @@
             this.cbExpressionInvert.UseVisualStyleBackColor = true;
             this.cbExpressionInvert.CheckedChanged += new System.EventHandler(this.cbExpressionInvert_CheckedChanged);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(799, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "Keyboard Velocity";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(799, 37);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Offset";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(799, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 25;
+            this.label4.Text = "Gain";
+            // 
+            // nudKeyboardVelocityOffset
+            // 
+            this.nudKeyboardVelocityOffset.Location = new System.Drawing.Point(840, 35);
+            this.nudKeyboardVelocityOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.nudKeyboardVelocityOffset.Name = "nudKeyboardVelocityOffset";
+            this.nudKeyboardVelocityOffset.Size = new System.Drawing.Size(55, 20);
+            this.nudKeyboardVelocityOffset.TabIndex = 26;
+            this.nudKeyboardVelocityOffset.ValueChanged += new System.EventHandler(this.nudKeyboardVelocityOffset_ValueChanged);
+            // 
+            // nudKeyboardVelocityGain
+            // 
+            this.nudKeyboardVelocityGain.Location = new System.Drawing.Point(840, 61);
+            this.nudKeyboardVelocityGain.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.nudKeyboardVelocityGain.Name = "nudKeyboardVelocityGain";
+            this.nudKeyboardVelocityGain.Size = new System.Drawing.Size(55, 20);
+            this.nudKeyboardVelocityGain.TabIndex = 27;
+            this.nudKeyboardVelocityGain.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudKeyboardVelocityGain.ValueChanged += new System.EventHandler(this.nudKeyboardVelocityGain_ValueChanged);
+            // 
             // KeyZone
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
+            this.Controls.Add(this.nudKeyboardVelocityGain);
+            this.Controls.Add(this.nudKeyboardVelocityOffset);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.cbExpressionInvert);
             this.Controls.Add(this.cbSustain);
             this.Controls.Add(this.btnClear);
@@ -233,6 +306,8 @@
             this.Size = new System.Drawing.Size(1054, 564);
             this.VisibleChanged += new System.EventHandler(this.KeyZoneControl_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.nudTranspose)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudKeyboardVelocityOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudKeyboardVelocityGain)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,5 +329,10 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.CheckBox cbSustain;
         private System.Windows.Forms.CheckBox cbExpressionInvert;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown nudKeyboardVelocityOffset;
+        private System.Windows.Forms.NumericUpDown nudKeyboardVelocityGain;
     }
 }
