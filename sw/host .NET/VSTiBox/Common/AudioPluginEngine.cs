@@ -509,8 +509,10 @@ namespace VSTiBox
                         continue;
                     }
                     plugin.Notes[pitch].Pressed = true;
-                    plugin.Notes[pitch].Velocity =  (byte)Math.Min(127,  Math.Max(0, (int)(data[2] * plugin.KeyboardVelocityGain) + plugin.KeyboardVelocityOffset));
+                    byte velo = (byte)Math.Min(127, Math.Max(0, (int)(data[2] * plugin.KeyboardVelocityGain) + plugin.KeyboardVelocityOffset));
+                    plugin.Notes[pitch].Velocity = velo;
                     newEv.Data[1] += (byte)plugin.Transpose;
+                    newEv.Data[2] = velo;
                     mFilteredMidiEvents.Add(newEv);
                 }
                 else if (msg.IsNoteOff(out pitch))

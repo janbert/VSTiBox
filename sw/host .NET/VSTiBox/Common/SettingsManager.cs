@@ -66,6 +66,7 @@ namespace VSTiBox
             {
                 XmlSerializer x = XmlSerializer.FromTypes(new[] { typeof(Settings) })[0];
                 //XmlSerializer x = new XmlSerializer(typeof(Settings));
+
                 using (TextReader reader = new StreamReader(SettingsFileName))
                 {
                     try
@@ -79,7 +80,7 @@ namespace VSTiBox
                             Bank bank;
                             if (DeserializeBank(bankFileName, out bank))
                             {
-                                mBankDict.Add(bank, bank.Name);
+                                                                mBankDict.Add(bank, bank.Name);
                             }
                             else
                             {
@@ -111,7 +112,19 @@ namespace VSTiBox
                 {
                     try
                     {
-                        bank = (Bank)x.Deserialize(reader);                       
+                        bank = (Bank)x.Deserialize(reader);
+
+                        /* Update to version 1 */
+                        if (bank.Version == 0)
+                        {
+                            bank.Version = 1;
+                            foreach (var preset in bank.Presets)
+                            {
+                                preset.KeyboardVelocityGain = 1.0f;
+                                preset.KeyboardVelocityOffset = 0;
+                            }
+                        }
+
                         return true; 
                     }
                     catch (Exception ex)

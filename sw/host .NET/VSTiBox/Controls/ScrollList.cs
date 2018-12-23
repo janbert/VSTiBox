@@ -22,6 +22,7 @@ namespace VSTiBox
         private Brush mScrollBrush = new SolidBrush(Color.FromArgb(132, 132, 132));    
         private int mViewPos = 0;
         private int mSelectedIndex;
+        private int mPreviousSelectedIndex = -1;
         private string[] mItems = new string[] { };
         private int mItemsInRange;
         private Color mBackColor = Color.FromArgb(23, 23, 23);
@@ -29,7 +30,20 @@ namespace VSTiBox
         private Font mSecondLineFont = new Font("Arial", 10);
 
         public event EventHandler ValueChanged;
-       
+
+        public int HighlightedIndex
+        {
+            get 
+            {
+                return mPreviousSelectedIndex; 
+            }
+            set 
+            {
+                mPreviousSelectedIndex = value;
+                Invalidate();
+            } 
+        }
+
         public int SelectedIndex 
         {
             get 
@@ -76,7 +90,7 @@ namespace VSTiBox
         }
 
         private Color mForeColor = Color.FromArgb(1, 123, 205);
-        private SolidBrush mForeBrush;
+        private SolidBrush mForeBrush = new SolidBrush(Color.FromArgb(1, 123, 205));
         public override System.Drawing.Color ForeColor
         {
             get
@@ -90,6 +104,22 @@ namespace VSTiBox
                 this.Invalidate();
             }
         }
+
+        private Color mPreviousSelectionColor = Color.Gray;
+        private SolidBrush mPreviousSelectionBrush = new SolidBrush(Color.Gray);
+        public System.Drawing.Color PreviousSelectionColor
+        {
+            get
+            {
+                return mPreviousSelectionColor;
+            }
+            set
+            {
+                mPreviousSelectionColor = value;
+                mPreviousSelectionBrush = new SolidBrush(value);
+                this.Invalidate();
+            }
+        }        
 
         private Color mTextColor = Color.White;
         private Brush mTextBrush;
@@ -206,7 +236,17 @@ namespace VSTiBox
                 int barSize = (int)(0.5f + (float)this.Height * (float)mItemsInRange / (float)mItems.Length);
                 int barTop = (int)(0.5f + (float)this.Height * (float)mViewPos / (float)mItems.Length);
 
-                g.FillRectangle(mScrollBrush, this.Width - 6, barTop, 5, barSize);
+                g.FillRectangle(mScrollBrush, this.Width - 6, barTop, 5, barSize);                            
+
+                if (mPreviousSelectedIndex != -1)
+                {
+                    int prevSelPos = (mPreviousSelectedIndex - mViewPos);
+                    if ((prevSelPos >= 0) && (prevSelPos < mItemsInRange))
+                    {// Draw selection rect
+                        int prevSelTop = prevSelPos * ITEMHEIGTH;
+                        g.FillRectangle(mPreviousSelectionBrush, 0, prevSelTop, this.Width - 7, ITEMHEIGTH);
+                    }
+                }
 
                 // Draw selection rect
                 int selectTop = (mSelectedIndex - mViewPos) * ITEMHEIGTH;

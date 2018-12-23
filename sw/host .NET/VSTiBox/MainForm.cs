@@ -1,4 +1,4 @@
-﻿using Jacobi.Vst.Interop.Host;
+using Jacobi.Vst.Interop.Host;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +32,7 @@ namespace VSTiBox
         const int LED_RED_DIMMED = 4;
         const int LED_RED_FULL = 65;
 
+        private bool mBankHasOnsong = false; 
         private int mMenuEncPrevPos = 0;
         private bool mIgnoreEvents = true;
         private SettingsManager mSettingsMgr;
@@ -62,7 +63,9 @@ namespace VSTiBox
             }
 
             // Array of UI controls of which only one is visible at a time
-            mExclusiveVisibleControls = new Control[] { keyZoneControl1, pnlEditorHostScroller, pnlSettings, pnlBankEditor, recordControl1 ,effectPluginSelectionControl1  };
+            mExclusiveVisibleControls = new Control[] { keyZoneControl1, 
+                pnlEditorHostScroller, pnlSettings, pnlBankEditor, 
+                recordControl1 ,effectPluginSelectionControl1, onSongControl  };
 
             foreach (Control control in mExclusiveVisibleControls)
             {
@@ -84,12 +87,19 @@ namespace VSTiBox
             // Control set to Visible?
             if(((Control)sender ).Visible )
             {
-                // Set other controls tot non-visible
-                foreach (Control control in mExclusiveVisibleControls )
+                if (mBankHasOnsong && onSongControl.Visible && !sender.Equals(onSongControl))
                 {
-                    if(!control.Equals (sender))
+                    // Other control tries to overrule onsongcontrol; ignore
+                }
+                else
+                {
+                    // Set other controls tot non-visible
+                    foreach (Control control in mExclusiveVisibleControls)
                     {
-                        control.Visible = false;
+                        if (!control.Equals(sender))
+                        {
+                            control.Visible = false;
+                        }
                     }
                 }
             }
@@ -218,7 +228,12 @@ namespace VSTiBox
             mBoardManager.Boards[2].Buttons[3].Pressed += btnMultiAndClickTrack_Pressed;
             // Encoder btn metronome off
             mBoardManager.Boards[3].Encoders[3].Button.Pressed += btnMetronomeOff_Pressed;
-
+            // Onsong load
+            mBoardManager.Boards[3].Buttons[1].Pressed += btnOnsongLoad_Pressed;
+            mBoardManager.Boards[3].Buttons[1].Released += btnOnsongLoad_Released;
+            // Onsong next
+            mBoardManager.Boards[3].Buttons[2].Pressed += btnOnsongNext_Pressed;
+            mBoardManager.Boards[3].Buttons[2].Released += btnOnsongNext_Released;
 
             mBoardManager.LedsOff();
 
@@ -381,6 +396,7 @@ namespace VSTiBox
             menuControl.AddMenuItem("Master FX", null);
             menuControl.AddMenuItem("View PDF", menuViewPDF_Click);
             menuControl.AddMenuItem("Set PDF", menuSetPDF_Click);
+            menuControl.AddMenuItem("Set OnSong", menuSetOnsong_Click);
             menuControl.AddMenuItem("Set MultiTrack", menuSetMultiTrack_Click);
             menuControl.AddMenuItem("Set ClickTrack", menuSetClickTrack_Click);
             menuControl.AddMenuItem("Settings", menuSettings_Click);
@@ -476,6 +492,56 @@ namespace VSTiBox
                     mBoardManager.Boards[2].Leds[3].R = LED_RED_FULL;
                     mBoardManager.Boards[2].ActivateLeds();
                 }
+            }
+        }
+
+        // 3 . 1
+        void btnOnsongLoad_Pressed(Button btn)
+        {
+            if (mBankHasOnsong)
+            {
+                mBoardManager.Boards[3].Leds[1].R = LED_RED_FULL;
+                mBoardManager.Boards[3].ActivateLeds();
+                this.Invoke(new Action(() =>
+                {
+                    onSongControl.LoadFile(mAudioPluginEngine.ActiveBank.OnSongFileName);
+                    onSongControl.Visible = true;
+                }));
+            }
+        }
+
+        // 3 . 1
+        void btnOnsongLoad_Released(Button btn)
+        {
+            if (mBankHasOnsong)
+            {
+                mBoardManager.Boards[3].Leds[1].R = LED_RED_DIMMED;
+                mBoardManager.Boards[3].ActivateLeds();
+            }
+        }
+
+        // 3 . 2
+        void btnOnsongNext_Pressed(Button btn)
+        {
+            if (mBankHasOnsong)
+            {
+                mBoardManager.Boards[3].Leds[2].R = LED_RED_FULL;
+                mBoardManager.Boards[3].ActivateLeds();
+
+                this.Invoke(new Action(() =>
+                {
+                    onSongControl.NextSection();
+                }));
+            }
+        }
+
+        // 3 . 2
+        void btnOnsongNext_Released(Button btn)
+        {
+            if (mBankHasOnsong)
+            {
+                mBoardManager.Boards[3].Leds[2].R = LED_RED_DIMMED;
+                mBoardManager.Boards[3].ActivateLeds();
             }
         }
 
@@ -591,6 +657,7 @@ namespace VSTiBox
             mMultitrackPlayer.Volume = bank.MultiTrackVolume;
             mClickTrackPlayer.Volume = bank.ClickTrackVolume;
             setTrackFiles(bank.MultiTrackFileName, bank.ClickTrackFileName);
+            setOnsongLed();
             popup.Close();
         }
 
@@ -660,6 +727,27 @@ namespace VSTiBox
                 {
                     mAudioPluginEngine.ActiveBank.PDFFileName = ofd.FileName;
                     saveBank_Click(string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private void menuSetOnsong_Click(string name)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "OnSong files (*.onsong)|*.onsong";
+            ofd.RestoreDirectory = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    mAudioPluginEngine.ActiveBank.OnSongFileName = ofd.FileName;
+                    saveBank_Click(string.Empty);
+                    setOnsongLed();
                 }
                 catch (Exception ex)
                 {
@@ -1212,6 +1300,25 @@ namespace VSTiBox
             if (File.Exists(clickTrackFile))
             {
                 mClickTrackPlayer.FileName = clickTrackFile;
+            }
+        }
+
+        private void setOnsongLed()
+        {
+            string fileName = mAudioPluginEngine.ActiveBank.OnSongFileName;
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            {
+                mBankHasOnsong = true;
+                mBoardManager.Boards[3].Leds[1].R = LED_RED_DIMMED;
+                mBoardManager.Boards[3].Leds[2].R = LED_RED_DIMMED;
+                mBoardManager.Boards[3].ActivateLeds();                
+            }
+            else
+            {
+                mBankHasOnsong = false;
+                mBoardManager.Boards[3].Leds[1].R = LED_RED_OFF;
+                mBoardManager.Boards[3].Leds[2].R = LED_RED_OFF;
+                mBoardManager.Boards[3].ActivateLeds();
             }
         }
 

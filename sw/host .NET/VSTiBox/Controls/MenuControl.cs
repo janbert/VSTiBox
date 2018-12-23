@@ -47,14 +47,15 @@ namespace VSTiBox
                 }
             }
         }
-
+       
         public void SelectCurrentMenuItem()
-        {
+        {           
             mScrollList_ValueChanged(null, null);
         }
 
         void mScrollList_ValueChanged(object sender, EventArgs e)
         {
+            scrollList1.HighlightedIndex = scrollList1.SelectedIndex;
             // Call delegate : find MenuItem which has to be called
             string value = scrollList1 .Items [scrollList1 .SelectedIndex ];
             // New active menu item!
