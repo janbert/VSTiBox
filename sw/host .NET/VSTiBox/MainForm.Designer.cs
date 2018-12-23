@@ -89,6 +89,7 @@
             this.pictureBoxCPU = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlEditorHostScroller = new System.Windows.Forms.Panel();
+            this.onSongControl = new Controls.OnSongControl();
             this.knobMasterPan = new VSTiBox.Knob();
             this.vuLeft = new VSTiBox.VuMeter();
             this.vuRight = new VSTiBox.VuMeter();
@@ -735,6 +736,13 @@
             this.pnlEditorHostScroller.Size = new System.Drawing.Size(1054, 554);
             this.pnlEditorHostScroller.TabIndex = 40;
             // 
+            // onSongControl
+            // 
+            this.onSongControl.Location = new System.Drawing.Point(0, 0);
+            this.pnlEditorHostScroller.Name = "onSongControl";
+            this.pnlEditorHostScroller.Size = new System.Drawing.Size(1054, 554);
+            this.pnlEditorHostScroller.TabIndex = 41;
+            // 
             // knobMasterPan
             // 
             this.knobMasterPan.ForeColor = System.Drawing.Color.White;
@@ -929,6 +937,7 @@
             this.Controls.Add(this.recordControl1);
             this.Controls.Add(this.effectPluginSelectionControl1);
             this.Controls.Add(this.pnlEditorHostScroller);
+            this.Controls.Add(this.onSongControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -1031,6 +1040,7 @@
         private System.Windows.Forms.Button btnCopyPlayList;
         private EffectPluginSelectionControl effectPluginSelectionControl1;
         private System.Windows.Forms.Panel pnlEditorHostScroller;
+        private VSTiBox.Controls.OnSongControl onSongControl;
         private System.Windows.Forms.Timer formStartTimer;
     }
 }
