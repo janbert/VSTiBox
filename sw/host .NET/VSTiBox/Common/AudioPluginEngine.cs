@@ -951,22 +951,29 @@ namespace VSTiBox
 
         public void LoadChannelPreset(VstPluginChannel channel, ChannelPreset channelPreset)
         {
-            // First load instrument
-            if (channelPreset.InstrumentVstPreset.State != PluginState.Empty)
+            try
             {
-                channel.InstrumentPlugin.AttachVstPluginContext(GetVstPluginContext(channelPreset.InstrumentVstPreset.Name), channelPreset.InstrumentVstPreset.Name);
-            }
-
-            // Then load all effects            
-            for (int i = 0; i < VstPluginChannel.NumberOfEffectPlugins; i++)
-            {
-                if (channelPreset.EffectVstPresets[i].State != PluginState.Empty)
+                // First load instrument
+                if (channelPreset.InstrumentVstPreset.State != PluginState.Empty)
                 {
-                    channel.EffectPlugins[i].AttachVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name), channelPreset.EffectVstPresets[i].Name);
+                    channel.InstrumentPlugin.AttachVstPluginContext(GetVstPluginContext(channelPreset.InstrumentVstPreset.Name), channelPreset.InstrumentVstPreset.Name);
                 }
-            }
 
-            channel.ImportChannelPreset(channelPreset);
+                // Then load all effects            
+                for (int i = 0; i < VstPluginChannel.NumberOfEffectPlugins; i++)
+                {
+                    if (channelPreset.EffectVstPresets[i].State != PluginState.Empty)
+                    {
+                        channel.EffectPlugins[i].AttachVstPluginContext(GetVstPluginContext(channelPreset.EffectVstPresets[i].Name), channelPreset.EffectVstPresets[i].Name);
+                    }
+                }
+
+                channel.ImportChannelPreset(channelPreset);
+            }
+            catch 
+            {
+                MessageBox.Show("Failed to load", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public VstPluginContext GetVstPluginContext(string name)
