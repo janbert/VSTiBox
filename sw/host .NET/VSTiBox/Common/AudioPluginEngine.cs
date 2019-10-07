@@ -1066,6 +1066,19 @@ namespace VSTiBox
                 addPath(dir.FullName);
             }
 
+            /* Clean up settings */
+            for (int i = 0; i < mSettingsMgr.Settings.KnownVSTPluginDlls.Count; ++i)
+            {
+                var dllPath = mSettingsMgr.Settings.KnownVSTPluginDlls[i];
+                if (!File.Exists(dllPath))
+                {
+                    mSettingsMgr.Settings.KnownVSTPluginDlls.RemoveAt(i);
+                    mSettingsMgr.Settings.Effects.RemoveAll(x => x.DLLPath == dllPath);
+                    mSettingsMgr.Settings.Instruments.RemoveAll(x => x.DLLPath == dllPath);
+                    --i;
+                }
+            }
+
             foreach (FileInfo file in new DirectoryInfo(path).GetFiles())
             {
                 if (file.Extension == ".dll")
