@@ -76,4 +76,10 @@ sw/host \.NET/OpenHardwareMonitor/Bin/Debug/
 
 *.opensdf
 
+hw/soundcard/SoundCard v1.0.brd
+
+hw/soundcard/SoundCard v1.0.sch
+
+sw/control/Control.uvgui.J.B. Kuipers
+
 sw/host .NET/.vs/VSTiBox/v15/
