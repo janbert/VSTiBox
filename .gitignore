@@ -75,3 +75,5 @@ sw/host \.NET/OpenHardwareMonitor/Bin/Debug/
 *.user
 
 *.opensdf
+
+sw/host .NET/.vs/VSTiBox/v15/
