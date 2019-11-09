@@ -47,6 +47,7 @@
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\_GIT_VSTiBox\sw\host .NET\BlueWave.Interop.Asio\pluginterfaces\vst2.x;D:\_GIT_VSTiBox\sw\host .NET\BlueWave.Interop.Asio\vst2.x;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -119,6 +120,7 @@
     <ClCompile Include="InstalledDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\VstEngine\stdafx.h" />
     <ClInclude Include="Asio.h" />
     <ClInclude Include="AsioDriver.h" />
     <ClInclude Include="AsioRedirect.h" />

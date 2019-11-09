@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSTiBox", "VSTiBox\VSTiBox.csproj", "{0A704654-566E-40B4-A430-A0B27E61F20F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bluewave.Interop.Asio", "BlueWave.Interop.Asio\Bluewave.Interop.Asio.vcxproj", "{6DB00BA8-EFDE-4D3A-8983-F01857A36C1A}"
@@ -116,5 +118,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B863B61-3F9E-4C4E-9523-F23035A8D05A}
 	EndGlobalSection
 EndGlobal
