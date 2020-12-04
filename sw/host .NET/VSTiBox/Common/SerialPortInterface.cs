@@ -175,7 +175,10 @@ namespace VSTiBox
 
         public void WriteMessage(SerialMessage msg)
         {
-            mWriteQueue.Enqueue (msg); 
+            if (mPort.IsOpen)
+            {
+                mWriteQueue.Enqueue(msg);
+            }
         }
 
         private void writeDequeueHandler()

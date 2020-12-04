@@ -66,7 +66,7 @@ namespace VSTiBox
 
         public void ActivateLeds()
         {
-            int boards = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3);
+            int boards = (1 << 0) | (1 << 1);//| (1 << 2) | (1 << 3);
             mInterface.WriteMessage(new SerialMessage(Command.LED_ACT, (byte)boards, 0));
         }
 

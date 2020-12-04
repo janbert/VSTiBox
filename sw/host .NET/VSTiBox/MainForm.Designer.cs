@@ -89,7 +89,7 @@
             this.pictureBoxCPU = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlEditorHostScroller = new System.Windows.Forms.Panel();
-            this.onSongControl = new Controls.OnSongControl();
+            this.onSongControl = new VSTiBox.Controls.OnSongControl();
             this.knobMasterPan = new VSTiBox.Knob();
             this.vuLeft = new VSTiBox.VuMeter();
             this.vuRight = new VSTiBox.VuMeter();
@@ -150,7 +150,7 @@
             this.pnlSettings.Controls.Add(this.label1);
             this.pnlSettings.Location = new System.Drawing.Point(0, 0);
             this.pnlSettings.Name = "pnlSettings";
-            this.pnlSettings.Size = new System.Drawing.Size(1054, 554);
+            this.pnlSettings.Size = new System.Drawing.Size(1054, 634);
             this.pnlSettings.TabIndex = 14;
             this.pnlSettings.Visible = false;
             // 
@@ -456,7 +456,7 @@
             this.lblTime.AutoSize = true;
             this.lblTime.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTime.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTime.Location = new System.Drawing.Point(1239, 701);
+            this.lblTime.Location = new System.Drawing.Point(1239, 781);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(38, 15);
             this.lblTime.TabIndex = 20;
@@ -467,7 +467,7 @@
             this.lblTempCase.AutoSize = true;
             this.lblTempCase.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTempCase.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTempCase.Location = new System.Drawing.Point(1239, 677);
+            this.lblTempCase.Location = new System.Drawing.Point(1239, 757);
             this.lblTempCase.Name = "lblTempCase";
             this.lblTempCase.Size = new System.Drawing.Size(37, 15);
             this.lblTempCase.TabIndex = 21;
@@ -478,7 +478,7 @@
             this.lblTempCPU.AutoSize = true;
             this.lblTempCPU.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTempCPU.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTempCPU.Location = new System.Drawing.Point(1239, 661);
+            this.lblTempCPU.Location = new System.Drawing.Point(1239, 741);
             this.lblTempCPU.Name = "lblTempCPU";
             this.lblTempCPU.Size = new System.Drawing.Size(37, 15);
             this.lblTempCPU.TabIndex = 22;
@@ -494,7 +494,7 @@
             this.lblUsageCPU.AutoSize = true;
             this.lblUsageCPU.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsageCPU.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblUsageCPU.Location = new System.Drawing.Point(1239, 630);
+            this.lblUsageCPU.Location = new System.Drawing.Point(1239, 710);
             this.lblUsageCPU.Name = "lblUsageCPU";
             this.lblUsageCPU.Size = new System.Drawing.Size(26, 15);
             this.lblUsageCPU.TabIndex = 24;
@@ -505,7 +505,7 @@
             this.lblUsageMemory.AutoSize = true;
             this.lblUsageMemory.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsageMemory.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblUsageMemory.Location = new System.Drawing.Point(1239, 645);
+            this.lblUsageMemory.Location = new System.Drawing.Point(1239, 725);
             this.lblUsageMemory.Name = "lblUsageMemory";
             this.lblUsageMemory.Size = new System.Drawing.Size(43, 15);
             this.lblUsageMemory.TabIndex = 26;
@@ -550,7 +550,7 @@
             this.pnlBankEditor.Controls.Add(this.label6);
             this.pnlBankEditor.Location = new System.Drawing.Point(0, 0);
             this.pnlBankEditor.Name = "pnlBankEditor";
-            this.pnlBankEditor.Size = new System.Drawing.Size(1054, 554);
+            this.pnlBankEditor.Size = new System.Drawing.Size(1054, 634);
             this.pnlBankEditor.TabIndex = 35;
             this.pnlBankEditor.VisibleChanged += new System.EventHandler(this.pnlBankEditor_VisibleChanged);
             // 
@@ -679,7 +679,7 @@
             // pbMasterFxInsert
             // 
             this.pbMasterFxInsert.Image = global::VSTiBox.Properties.Resources.insert_on;
-            this.pbMasterFxInsert.Location = new System.Drawing.Point(1245, 554);
+            this.pbMasterFxInsert.Location = new System.Drawing.Point(1245, 634);
             this.pbMasterFxInsert.Name = "pbMasterFxInsert";
             this.pbMasterFxInsert.Size = new System.Drawing.Size(32, 32);
             this.pbMasterFxInsert.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -712,7 +712,7 @@
             // pictureBoxCPU
             // 
             this.pictureBoxCPU.Image = global::VSTiBox.Properties.Resources.cpu;
-            this.pictureBoxCPU.Location = new System.Drawing.Point(1220, 635);
+            this.pictureBoxCPU.Location = new System.Drawing.Point(1220, 715);
             this.pictureBoxCPU.Name = "pictureBoxCPU";
             this.pictureBoxCPU.Size = new System.Drawing.Size(16, 16);
             this.pictureBoxCPU.TabIndex = 25;
@@ -721,7 +721,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::VSTiBox.Properties.Resources.thermometer;
-            this.pictureBox1.Location = new System.Drawing.Point(1216, 663);
+            this.pictureBox1.Location = new System.Drawing.Point(1216, 743);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.TabIndex = 23;
@@ -733,22 +733,22 @@
             this.pnlEditorHostScroller.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.pnlEditorHostScroller.Location = new System.Drawing.Point(0, 0);
             this.pnlEditorHostScroller.Name = "pnlEditorHostScroller";
-            this.pnlEditorHostScroller.Size = new System.Drawing.Size(1054, 554);
-            this.pnlEditorHostScroller.TabIndex = 40;
+            this.pnlEditorHostScroller.Size = new System.Drawing.Size(1054, 634);
+            this.pnlEditorHostScroller.TabIndex = 41;
             // 
             // onSongControl
             // 
             this.onSongControl.Location = new System.Drawing.Point(0, 0);
-            this.pnlEditorHostScroller.Name = "onSongControl";
-            this.pnlEditorHostScroller.Size = new System.Drawing.Size(1054, 554);
-            this.pnlEditorHostScroller.TabIndex = 41;
+            this.onSongControl.Name = "onSongControl";
+            this.onSongControl.Size = new System.Drawing.Size(1054, 634);
+            this.onSongControl.TabIndex = 42;
             // 
             // knobMasterPan
             // 
             this.knobMasterPan.ForeColor = System.Drawing.Color.White;
             this.knobMasterPan.KnobBorderStyle = VSTiBox.KnobStyle.FlatBorder;
             this.knobMasterPan.KnobColor = System.Drawing.Color.White;
-            this.knobMasterPan.Location = new System.Drawing.Point(1236, 588);
+            this.knobMasterPan.Location = new System.Drawing.Point(1236, 668);
             this.knobMasterPan.MarkerColor = System.Drawing.Color.White;
             this.knobMasterPan.Minimum = -100;
             this.knobMasterPan.Name = "knobMasterPan";
@@ -761,7 +761,7 @@
             // 
             this.vuLeft.Location = new System.Drawing.Point(1250, 4);
             this.vuLeft.Name = "vuLeft";
-            this.vuLeft.Size = new System.Drawing.Size(15, 543);
+            this.vuLeft.Size = new System.Drawing.Size(15, 623);
             this.vuLeft.TabIndex = 16;
             this.vuLeft.Text = "vuLeft";
             this.vuLeft.Value = 0F;
@@ -770,17 +770,17 @@
             // 
             this.vuRight.Location = new System.Drawing.Point(1265, 4);
             this.vuRight.Name = "vuRight";
-            this.vuRight.Size = new System.Drawing.Size(12, 543);
+            this.vuRight.Size = new System.Drawing.Size(15, 623);
             this.vuRight.TabIndex = 15;
             this.vuRight.Text = "vuRight";
             this.vuRight.Value = 0F;
             // 
             // menuControl
             // 
-            this.menuControl.Location = new System.Drawing.Point(1060, 314);
+            this.menuControl.Location = new System.Drawing.Point(1060, 354);
             this.menuControl.Name = "menuControl";
             this.menuControl.SelectedIndex = 0;
-            this.menuControl.Size = new System.Drawing.Size(187, 240);
+            this.menuControl.Size = new System.Drawing.Size(187, 280);
             this.menuControl.TabIndex = 12;
             // 
             // bankControl
@@ -788,14 +788,14 @@
             this.bankControl.Location = new System.Drawing.Point(1060, 4);
             this.bankControl.Name = "bankControl";
             this.bankControl.SelectedIndex = 0;
-            this.bankControl.Size = new System.Drawing.Size(187, 283);
+            this.bankControl.Size = new System.Drawing.Size(187, 323);
             this.bankControl.TabIndex = 11;
             // 
             // chCtrl7
             // 
             this.chCtrl7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl7.EffectPluginSelectionControl = null;
-            this.chCtrl7.Location = new System.Drawing.Point(1086, 560);
+            this.chCtrl7.Location = new System.Drawing.Point(1086, 640);
             this.chCtrl7.Name = "chCtrl7";
             this.chCtrl7.PluginChannel = null;
             this.chCtrl7.Size = new System.Drawing.Size(150, 160);
@@ -805,7 +805,7 @@
             // 
             this.chCtrl6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl6.EffectPluginSelectionControl = null;
-            this.chCtrl6.Location = new System.Drawing.Point(936, 560);
+            this.chCtrl6.Location = new System.Drawing.Point(936, 640);
             this.chCtrl6.Name = "chCtrl6";
             this.chCtrl6.PluginChannel = null;
             this.chCtrl6.Size = new System.Drawing.Size(150, 160);
@@ -815,7 +815,7 @@
             // 
             this.chCtrl5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl5.EffectPluginSelectionControl = null;
-            this.chCtrl5.Location = new System.Drawing.Point(786, 560);
+            this.chCtrl5.Location = new System.Drawing.Point(786, 640);
             this.chCtrl5.Name = "chCtrl5";
             this.chCtrl5.PluginChannel = null;
             this.chCtrl5.Size = new System.Drawing.Size(150, 160);
@@ -825,7 +825,7 @@
             // 
             this.chCtrl4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl4.EffectPluginSelectionControl = null;
-            this.chCtrl4.Location = new System.Drawing.Point(636, 560);
+            this.chCtrl4.Location = new System.Drawing.Point(636, 640);
             this.chCtrl4.Name = "chCtrl4";
             this.chCtrl4.PluginChannel = null;
             this.chCtrl4.Size = new System.Drawing.Size(150, 160);
@@ -835,7 +835,7 @@
             // 
             this.chCtrl3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl3.EffectPluginSelectionControl = null;
-            this.chCtrl3.Location = new System.Drawing.Point(484, 560);
+            this.chCtrl3.Location = new System.Drawing.Point(484, 640);
             this.chCtrl3.Name = "chCtrl3";
             this.chCtrl3.PluginChannel = null;
             this.chCtrl3.Size = new System.Drawing.Size(150, 160);
@@ -845,7 +845,7 @@
             // 
             this.chCtrl2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl2.EffectPluginSelectionControl = null;
-            this.chCtrl2.Location = new System.Drawing.Point(334, 560);
+            this.chCtrl2.Location = new System.Drawing.Point(334, 640);
             this.chCtrl2.Name = "chCtrl2";
             this.chCtrl2.PluginChannel = null;
             this.chCtrl2.Size = new System.Drawing.Size(150, 160);
@@ -855,7 +855,7 @@
             // 
             this.chCtrl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl1.EffectPluginSelectionControl = null;
-            this.chCtrl1.Location = new System.Drawing.Point(184, 560);
+            this.chCtrl1.Location = new System.Drawing.Point(184, 640);
             this.chCtrl1.Name = "chCtrl1";
             this.chCtrl1.PluginChannel = null;
             this.chCtrl1.Size = new System.Drawing.Size(150, 160);
@@ -865,7 +865,7 @@
             // 
             this.chCtrl0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.chCtrl0.EffectPluginSelectionControl = null;
-            this.chCtrl0.Location = new System.Drawing.Point(34, 560);
+            this.chCtrl0.Location = new System.Drawing.Point(38, 640);
             this.chCtrl0.Name = "chCtrl0";
             this.chCtrl0.PluginChannel = null;
             this.chCtrl0.Size = new System.Drawing.Size(150, 160);
@@ -876,7 +876,7 @@
             this.keyZoneControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.keyZoneControl1.Location = new System.Drawing.Point(0, 0);
             this.keyZoneControl1.Name = "keyZoneControl1";
-            this.keyZoneControl1.Size = new System.Drawing.Size(1054, 554);
+            this.keyZoneControl1.Size = new System.Drawing.Size(1054, 634);
             this.keyZoneControl1.TabIndex = 28;
             // 
             // recordControl1
@@ -884,7 +884,7 @@
             this.recordControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.recordControl1.Location = new System.Drawing.Point(0, 0);
             this.recordControl1.Name = "recordControl1";
-            this.recordControl1.Size = new System.Drawing.Size(1054, 554);
+            this.recordControl1.Size = new System.Drawing.Size(1054, 634);
             this.recordControl1.TabIndex = 30;
             // 
             // effectPluginSelectionControl1
@@ -892,7 +892,7 @@
             this.effectPluginSelectionControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
             this.effectPluginSelectionControl1.Location = new System.Drawing.Point(0, 0);
             this.effectPluginSelectionControl1.Name = "effectPluginSelectionControl1";
-            this.effectPluginSelectionControl1.Size = new System.Drawing.Size(1054, 554);
+            this.effectPluginSelectionControl1.Size = new System.Drawing.Size(1054, 634);
             this.effectPluginSelectionControl1.TabIndex = 38;
             // 
             // formStartTimer
@@ -905,7 +905,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(23)))), ((int)(((byte)(23)))));
-            this.ClientSize = new System.Drawing.Size(1280, 720);
+            this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.pbMasterFxInsert);
             this.Controls.Add(this.knobMasterPan);
             this.Controls.Add(this.pbBPMDown);

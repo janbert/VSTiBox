@@ -20,6 +20,10 @@ using VSTiBox.Common;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using VSTiBox.Controls;
+using TobiasErichsen.teVirtualMIDI;
+using BeatStepController;
+using System.Threading;
+using static BeatStepController.BeatStep;
 
 namespace VSTiBox
 {
@@ -50,21 +54,25 @@ namespace VSTiBox
 
         private Control[] mExclusiveVisibleControls;
 
+        private BeatStep[] mBeatSteps;
+        private TeVirtualMIDI mVirtualMidiPort;
+        Thread mVirtualMidiPortReceiveThread;
+
         public MainForm()
         {
             InitializeComponent();
 
-            mChannelControls = new ChannelControl[] { chCtrl0, chCtrl1, chCtrl2, chCtrl3, chCtrl4, chCtrl5, chCtrl6, chCtrl7 };    
-            
-            foreach(ChannelControl c in mChannelControls )
+            mChannelControls = new ChannelControl[] { chCtrl0, chCtrl1, chCtrl2, chCtrl3, chCtrl4, chCtrl5, chCtrl6, chCtrl7 };
+
+            foreach (ChannelControl c in mChannelControls)
             {
                 c.EffectPluginSelectionControl = effectPluginSelectionControl1;
                 c.OnHighLighted += c_OnHighLighted;
             }
 
             // Array of UI controls of which only one is visible at a time
-            mExclusiveVisibleControls = new Control[] { keyZoneControl1, 
-                pnlEditorHostScroller, pnlSettings, pnlBankEditor, 
+            mExclusiveVisibleControls = new Control[] { keyZoneControl1,
+                pnlEditorHostScroller, pnlSettings, pnlBankEditor,
                 recordControl1 ,effectPluginSelectionControl1, onSongControl  };
 
             foreach (Control control in mExclusiveVisibleControls)
@@ -79,7 +87,153 @@ namespace VSTiBox
                 {
                     control.Visible = false;
                 }
-            }            
+            }
+
+            TeVirtualMIDI.logging(TeVirtualMIDI.TE_VM_LOGGING_MISC | TeVirtualMIDI.TE_VM_LOGGING_RX | TeVirtualMIDI.TE_VM_LOGGING_TX);
+            mVirtualMidiPort = new TeVirtualMIDI("VSTiBoard");
+            mVirtualMidiPortReceiveThread = new Thread(new ThreadStart(VirtualMidiWorker));
+            mVirtualMidiPortReceiveThread.IsBackground = true;
+            mVirtualMidiPortReceiveThread.Start();
+
+            mBeatSteps = new BeatStep[BeatStep.AvailableDeviceCount];
+            for (int i = 0; i < BeatStep.AvailableDeviceCount; ++i)
+            {
+                try
+                {
+                    mBeatSteps[i] = new BeatStep();
+                    mBeatSteps[i].Open(i);
+                    mBeatSteps[i].EncoderChanged += mBeatSteps_EncoderChanged;
+                    mBeatSteps[i].PadChanged += MainForm_PadChanged;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Beatstep error :" + ex.Message);
+                }
+            }
+        }
+
+        private void MainForm_PadChanged(object sender, BeatStep.PadChangedEventArgs e)
+        {
+            // Beatstep 0 && pressed
+            if (e.Index == 0)
+            {
+                /* Pressed */
+                switch (e.Controller)
+                {
+                    case BeatStep.Controller.Pad0:
+                        // Menu button
+                        if (e.State)
+                        {
+                            this.Invoke(new Action(() => bankControl.SelectCurrentMenuItem()));
+                        }
+                        break;
+                    case BeatStep.Controller.Pad1:
+                        // Save button
+                        if (e.State)
+                        {
+                            this.BeginInvoke(new Action(() => saveBank_Click(string.Empty)));
+                        }
+                        break;
+                    case BeatStep.Controller.Pad8:
+                        // Metronome button
+                        this.BeginInvoke(new Action(() => metronome_click(e.State)));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void metronome_click(bool pressed)
+        {
+            if (pressed)
+            {
+                if (mMetronomeTimer.IsRunning)
+                {
+                    mMetronomeTimer.Stop();
+                    mBeatSteps[0].SetPadColor(Controller.Pad8, PadColor.Off);
+                }
+                else
+                {
+                    mMetronomeTimer.Start();
+                }
+            }
+            else
+            {
+                if (mMetronomeTimer.IsRunning)
+                {
+                    mBeatSteps[0].SetPadColor(Controller.Pad8, PadColor.Red);
+                }
+            }
+        }
+
+        private byte mSpeakerVolume = 100;
+        private byte mMainVolume = 100;
+        private byte mHeadphoneVolume = 100;
+
+        private int VolumeBound(int volume)
+        {
+            return Math.Min(127, Math.Max(0, volume));
+        }
+
+        private void mBeatSteps_EncoderChanged(object sender, BeatStep.EncoderChangedEventArgs e)
+        {
+            // Beatstep 0
+            if (e.Index == 0)
+            {
+                switch (e.Controller)
+                {
+                    case BeatStep.Controller.Volume:
+                        if (e.Delta > 0)
+                        {
+                            bankControl.SelectedIndex++;
+                        }
+                        else
+                        {
+                            bankControl.SelectedIndex--;
+                        }
+                        break;
+                    case BeatStep.Controller.Encoder5:
+                        mHeadphoneVolume = (byte)VolumeBound(mHeadphoneVolume + e.Delta);
+                        SetChannelVolume(2, mHeadphoneVolume);
+                        break;
+                    case BeatStep.Controller.Encoder6:
+                        mSpeakerVolume = (byte)VolumeBound(mSpeakerVolume + e.Delta);
+                        SetChannelVolume(4, mSpeakerVolume);
+                        break;
+                    case BeatStep.Controller.Encoder7:
+                        mMainVolume = (byte)VolumeBound(mMainVolume + e.Delta);
+                        SetChannelVolume(0, mMainVolume);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void VirtualMidiWorker()
+        {
+
+            byte[] command;
+
+            try
+            {
+                while (true)
+                {
+                    command = mVirtualMidiPort.GetCommand();
+                    //mVirtualMidiPort.sendCommand(command);
+                   // VirtualMidiAppendText(byteArrayToString(command));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("thread aborting: " + ex.Message);
+            }
+        }
+
+        void SetChannelVolume(int ch, int value)
+        {
+            mVirtualMidiPort.sendCommand(new byte[] { 0xB8, (byte)(0x66 + ch), (byte)value });
         }
 
         void control_VisibleChanged(object sender, EventArgs e)
@@ -275,6 +429,8 @@ namespace VSTiBox
             if (!asioFail)
             {
                 // get asio buffsizes
+                mSettingsMgr.Settings.AsioDeviceNr = Math.Min(mSettingsMgr.Settings.AsioDeviceNr, AsioDriver.InstalledDrivers.Count() - 1);
+
                 if (mSettingsMgr.Settings.AsioDeviceNr != -1)
                 {
                     try
@@ -319,7 +475,7 @@ namespace VSTiBox
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show("Asio error: "+ ex.Message);
                         asioFail = true;
                     }
                 }
@@ -1118,6 +1274,8 @@ namespace VSTiBox
             }
             else
             {
+                mVirtualMidiPort.shutdown();
+                mVirtualMidiPortReceiveThread.Abort();
                 if (mAudioPluginEngine != null)
                 {
                     mAudioPluginEngine.Stop();

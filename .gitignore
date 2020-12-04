@@ -83,3 +83,19 @@ hw/soundcard/SoundCard v1.0.sch
 sw/control/Control.uvgui.J.B. Kuipers
 
 sw/host .NET/.vs/VSTiBox/v15/
+
+sw/host .NET/.vs/VSTiBox/v16/
+
+sw/host .NET/Midi/bin/Debug/
+
+sw/host .NET/Midi/bin/Release/
+
+sw/host .NET/Midi/docs/
+
+*.ndoc
+
+sw/host .NET/Midi/obj/Debug/
+
+sw/host .NET/Midi/obj/Release/
+
+sw/host .NET/Midi/README.txt

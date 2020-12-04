@@ -235,7 +235,7 @@ namespace VSTiBox
                     mEncPos = pos;
                     if (delta > -127 && delta < 127)
                     {
-                        EncoderChange(delta);
+                        EncoderChange(-delta); /*Inverted or control v1.3 */
                     }
                 }
             }
